@@ -29,19 +29,19 @@ ADC3(5) PF9 CoolPress
 ADC3(6) PA0 CoolFlow
 ADC3(7) PA1 NC
 
-~~~~~~~~~~~~~~ Did here
-
-/* Ins and outs */
+/* Generic IO */
 MISC_IO1 PC4
 MISC_IO2 PB1
 MISC_IO3 PA4
 MISC_IO4 PA5
 
+/* Generic In */
 GP_IN1 PF11 NC
 GP_IN2 PG0 NC
 GP_IN3 PG1 NC
 GP_IN4 PE7 NC
 
+/* Generic Out */
 GP_OUT1 PE4 RTD Go
 GP_OUT2 PD15 NC
 GP_OUT3 PE2 NC
