@@ -18,8 +18,6 @@ TSAL_HV_SIG PC5
 Buzzer PF13
 Brake_Light PD14
 
-~~~~~~~~~~~~~~ Did here
-
 /* Analog Inputs */
 ADC1 PA3 APPS1
 ADC2 PC0 APPS2
@@ -30,6 +28,8 @@ ADC3(4) PF4 Temp2
 ADC3(5) PF9 CoolPress
 ADC3(6) PA0 CoolFlow
 ADC3(7) PA1 NC
+
+~~~~~~~~~~~~~~ Did here
 
 /* Ins and outs */
 MISC_IO1 PC4
