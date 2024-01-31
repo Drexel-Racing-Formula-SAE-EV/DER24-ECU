@@ -57,6 +57,46 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define RTD_Go_Pin GPIO_PIN_4
+#define RTD_Go_GPIO_Port GPIOE
+#define BSE2_Pin GPIO_PIN_3
+#define BSE2_GPIO_Port GPIOF
+#define CoolTemp2_Pin GPIO_PIN_4
+#define CoolTemp2_GPIO_Port GPIOF
+#define CoolTemp1_Pin GPIO_PIN_5
+#define CoolTemp1_GPIO_Port GPIOF
+#define CoolPress_Pin GPIO_PIN_9
+#define CoolPress_GPIO_Port GPIOF
+#define MTR_EN_Pin GPIO_PIN_10
+#define MTR_EN_GPIO_Port GPIOF
+#define APPS2_Pin GPIO_PIN_0
+#define APPS2_GPIO_Port GPIOC
+#define BSE1_Pin GPIO_PIN_3
+#define BSE1_GPIO_Port GPIOC
+#define CoolFlow_Pin GPIO_PIN_0
+#define CoolFlow_GPIO_Port GPIOA
+#define APPS1_Pin GPIO_PIN_3
+#define APPS1_GPIO_Port GPIOA
+#define Firmware_Ok_Pin GPIO_PIN_7
+#define Firmware_Ok_GPIO_Port GPIOA
+#define TSAL_HV_SIG_Pin GPIO_PIN_5
+#define TSAL_HV_SIG_GPIO_Port GPIOC
+#define MTR_Fault_Pin GPIO_PIN_2
+#define MTR_Fault_GPIO_Port GPIOB
+#define MTR_Ok_Pin GPIO_PIN_12
+#define MTR_Ok_GPIO_Port GPIOF
+#define Buzzer_Pin GPIO_PIN_13
+#define Buzzer_GPIO_Port GPIOF
+#define IMD_Fail_Pin GPIO_PIN_14
+#define IMD_Fail_GPIO_Port GPIOF
+#define BMS_Fail_Pin GPIO_PIN_15
+#define BMS_Fail_GPIO_Port GPIOF
+#define BSPD_Fail_Pin GPIO_PIN_13
+#define BSPD_Fail_GPIO_Port GPIOE
+#define Brake_Light_Pin GPIO_PIN_14
+#define Brake_Light_GPIO_Port GPIOD
+#define SPI6_NSS_Pin GPIO_PIN_8
+#define SPI6_NSS_GPIO_Port GPIOG
 
 /* USER CODE BEGIN Private defines */
 
