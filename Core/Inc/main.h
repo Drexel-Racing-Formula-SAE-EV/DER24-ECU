@@ -61,6 +61,7 @@ void MX_TIM5_Init(void);
 void MX_USART3_UART_Init(void);
 void MX_UART7_Init(void);
 void MX_RTC_Init(void);
+void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN EFP */
 

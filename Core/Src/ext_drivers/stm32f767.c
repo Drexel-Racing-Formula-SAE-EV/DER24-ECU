@@ -69,6 +69,7 @@ void stm32f767_init(struct stm32f767_device *dev){
 	MX_GPIO_Init();
 	MX_CAN1_Init();
 	MX_ADC1_Init();
+	MX_ADC2_Init();
 	MX_ADC3_Init();
 	MX_I2C2_Init();
 	MX_SPI6_Init();

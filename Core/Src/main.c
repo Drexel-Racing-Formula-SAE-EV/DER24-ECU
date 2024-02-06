@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,7 +71,6 @@ const osThreadAttr_t dev_task_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_ADC2_Init(void);
 void dev_task_fn(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -110,7 +109,6 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
   app_create();
   /* USER CODE END 2 */
@@ -275,7 +273,7 @@ void MX_ADC1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_ADC2_Init(void)
+void MX_ADC2_Init(void)
 {
 
   /* USER CODE BEGIN ADC2_Init 0 */
