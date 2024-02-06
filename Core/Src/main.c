@@ -42,11 +42,14 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
 ADC_HandleTypeDef hadc3;
 
 CAN_HandleTypeDef hcan1;
 
 I2C_HandleTypeDef hi2c2;
+
+RTC_HandleTypeDef hrtc;
 
 SPI_HandleTypeDef hspi6;
 
@@ -68,15 +71,7 @@ const osThreadAttr_t dev_task_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_CAN1_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_ADC3_Init(void);
-static void MX_I2C2_Init(void);
-static void MX_SPI6_Init(void);
-static void MX_TIM5_Init(void);
-static void MX_USART3_UART_Init(void);
-static void MX_UART7_Init(void);
+static void MX_ADC2_Init(void);
 void dev_task_fn(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -115,17 +110,9 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_CAN1_Init();
-  MX_ADC1_Init();
-  MX_ADC3_Init();
-  MX_I2C2_Init();
-  MX_SPI6_Init();
-  MX_TIM5_Init();
-  MX_USART3_UART_Init();
-  MX_UART7_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
-
+  app_create();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -145,6 +132,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+#if 0
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -153,6 +141,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+#endif
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -191,9 +180,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
@@ -233,7 +223,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_ADC1_Init(void)
+void MX_ADC1_Init(void)
 {
 
   /* USER CODE BEGIN ADC1_Init 0 */
@@ -281,11 +271,63 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
+
+}
+
+/**
   * @brief ADC3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_ADC3_Init(void)
+void MX_ADC3_Init(void)
 {
 
   /* USER CODE BEGIN ADC3_Init 0 */
@@ -337,7 +379,7 @@ static void MX_ADC3_Init(void)
   * @param None
   * @retval None
   */
-static void MX_CAN1_Init(void)
+void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
@@ -374,7 +416,7 @@ static void MX_CAN1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_I2C2_Init(void)
+void MX_I2C2_Init(void)
 {
 
   /* USER CODE BEGIN I2C2_Init 0 */
@@ -418,11 +460,74 @@ static void MX_I2C2_Init(void)
 }
 
 /**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 0x0;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 0x1;
+  sDate.Year = 0x0;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
+
+/**
   * @brief SPI6 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_SPI6_Init(void)
+void MX_SPI6_Init(void)
 {
 
   /* USER CODE BEGIN SPI6_Init 0 */
@@ -462,7 +567,7 @@ static void MX_SPI6_Init(void)
   * @param None
   * @retval None
   */
-static void MX_TIM5_Init(void)
+void MX_TIM5_Init(void)
 {
 
   /* USER CODE BEGIN TIM5_Init 0 */
@@ -526,7 +631,7 @@ static void MX_TIM5_Init(void)
   * @param None
   * @retval None
   */
-static void MX_UART7_Init(void)
+void MX_UART7_Init(void)
 {
 
   /* USER CODE BEGIN UART7_Init 0 */
@@ -561,7 +666,7 @@ static void MX_UART7_Init(void)
   * @param None
   * @retval None
   */
-static void MX_USART3_UART_Init(void)
+void MX_USART3_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART3_Init 0 */
@@ -596,7 +701,7 @@ static void MX_USART3_UART_Init(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
+void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
