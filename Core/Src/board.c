@@ -12,15 +12,15 @@
 #include "board.h"
 #include "app.h"
 
-extern struct app_data app;
+extern app_data_t app;
 
-void board_init(struct board* dev) {
+void board_init(board_t *dev) {
 	stm32f767_init(&dev->stm32f767);
 
 	poten_init(&dev->apps1, APPS1_MIN, APPS1_MAX, &dev->stm32f767.hadc1, ADC_read_count);
 	poten_init(&dev->apps2, APPS2_MIN, APPS2_MAX, &dev->stm32f767.hadc2, ADC_read_count);
-	pressTrans_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, BSE1_ADC_CH, ADC_read_count);
-	pressTrans_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, BSE2_ADC_CH, ADC_read_count);
+	pressure_sensor_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, BSE1_ADC_CH, ADC_read_count);
+	pressure_sensor_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, BSE2_ADC_CH, ADC_read_count);
 
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 

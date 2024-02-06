@@ -23,16 +23,16 @@
  */
 void apps_task_fn(void *arg);
 
-TaskHandle_t apps_task_start(struct app_data *data) {
+TaskHandle_t apps_task_start(app_data_t *data) {
     TaskHandle_t handle;
     xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 7, &handle);
     return handle;
 }
 
 void apps_task_fn(void *arg) {
-    struct app_data *data = (struct app_data *)arg;
-    struct poten *apps1 = &data->board.apps1;
-    struct poten *apps2 = &data->board.apps2;
+    app_data_t *data = (app_data_t *)arg;
+    poten_t *apps1 = &data->board.apps1;
+    poten_t *apps2 = &data->board.apps2;
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
     uint16_t throttleHex;
@@ -55,11 +55,11 @@ void apps_task_fn(void *arg) {
         // Read throttle
         apps1->count = apps1->read_count(apps1->handle);
         apps2->count = apps2->read_count(apps2->handle);
-        apps1->percent = potenGetPercent(apps1);
-        apps1->percent = potenGetPercent(apps2);
+        apps1->percent = poten_get_percent(apps1);
+        apps1->percent = poten_get_percent(apps2);
 
         // T.4.2.5 (2022)
-        if(!potenCheckImplausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
+        if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
             data->appsFaultFlag = true;
         }
 
@@ -69,7 +69,7 @@ void apps_task_fn(void *arg) {
             TxPacket.data[1] = 0x00;
             TxPacket.data[2] = 0x00;
         }else{
-            throttleHex = percentToThrottleHex(data->throttlePercent);
+            throttleHex = poten_percent_to_hex(data->throttlePercent);
             TxPacket.data[1] = TO_LSB(throttleHex);
             TxPacket.data[2] = TO_MSB(throttleHex);
         }

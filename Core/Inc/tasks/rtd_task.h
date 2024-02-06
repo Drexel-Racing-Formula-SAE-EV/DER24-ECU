@@ -9,7 +9,8 @@
 *
 */
 
-#pragma once
+#ifndef __RTD_TASK_H_
+#define __RTD_TASK_H_
 
 #include "cmsis_os.h"
 #include "app.h"
@@ -20,4 +21,6 @@
 * @param data App data structure pointer
 * @return TaskHandle_t Handle used for task
 */
-TaskHandle_t rtd_task_start(struct app_data *data);
+TaskHandle_t rtd_task_start(app_data_t *data);
+
+#endif

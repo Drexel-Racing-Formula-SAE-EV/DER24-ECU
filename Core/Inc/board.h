@@ -9,11 +9,12 @@
  * 
  */
 
-#pragma once
+#ifndef __BOARD_H_
+#define __BOARD_H_
 
+#include <ext_drivers/pressure_sensor.h>
 #include <stdbool.h>
 
-#include "ext_drivers/pressTrans.h"
 #include "ext_drivers/stm32f767.h"
 #include "ext_drivers/poten.h"
 #include "ext_drivers/canbus.h"
@@ -22,20 +23,22 @@
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
 
-struct board {
+typedef struct {
 	// Physical devices on the board
-	struct stm32f767_device stm32f767;
-	struct pressTrans bse1;
-	struct pressTrans bse2;
-	struct poten apps1;
-	struct poten apps2;
- 	struct canbus_device canbus_device;
-	struct cli_device cli;
-};
+	stm32f767_device_t stm32f767;
+	pressure_sensor_t bse1;
+	pressure_sensor_t bse2;
+	poten_t apps1;
+	poten_t apps2;
+ 	canbus_device_t canbus_device;
+	cli_device_t cli;
+} board_t;
 
-void board_init(struct board* dev);
+void board_init(board_t *dev);
 
 uint16_t ADC_read_count(void *hadc);
 
 void setBrakeLight(bool state);
 void setMotorEn(bool state);
+
+#endif

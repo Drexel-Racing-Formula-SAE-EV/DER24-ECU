@@ -9,11 +9,12 @@
  * 
  */
 
-#pragma once
+#ifndef __POTEN_H_
+#define __POTEN_H_
 
 #include <stdint.h>
 
-struct poten {
+typedef struct {
 	uint16_t min;
 	uint16_t max;
 
@@ -23,12 +24,14 @@ struct poten {
 	void *handle;
 
 	uint16_t(*read_count)(void *hadc);
-};
+} poten_t;
 
-void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *hadc));
+void poten_init(poten_t *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *hadc));
 
-float potenGetPercent(struct poten *root);
+float poten_get_percent(poten_t *root);
 
-uint16_t percentToThrottleHex(float percent);
+uint16_t poten_percent_to_hex(float percent);
 
-uint8_t potenCheckImplausability(float L, float R, int thresh, int count);
+uint8_t poten_check_plausibility(float L, float R, int thresh, int count);
+
+#endif

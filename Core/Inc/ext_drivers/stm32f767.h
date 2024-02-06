@@ -9,12 +9,13 @@
 *
 */
 
-#pragma once
+#ifndef __STM32F767_H_
+#define __STM32F767_H_
 
 #include <stm32f7xx_hal.h>
 #include "cmsis_os.h"
 
-struct stm32f767_device {
+typedef struct {
 	ADC_HandleTypeDef hadc1;
 	ADC_HandleTypeDef hadc2;
 	ADC_HandleTypeDef hadc3;
@@ -40,6 +41,8 @@ struct stm32f767_device {
 	osMessageQueueId_t can1_mq;
 
 	CAN_TxHeaderTypeDef can1_txheader;
-};
+} stm32f767_device_t;
 
-void stm32f767_init(struct stm32f767_device *dev);
+void stm32f767_init(stm32f767_device_t *dev);
+
+#endif

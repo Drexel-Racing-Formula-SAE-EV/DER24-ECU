@@ -9,7 +9,8 @@
  * 
  */
 
-#pragma once
+#ifndef __CANBUS_H_
+#define __CANBUS_H_
 
 #include "cmsis_os.h"
 #include <stm32f7xx_hal.h>
@@ -21,11 +22,13 @@ typedef struct {
     uint8_t data[DATALEN];
 } canbus_packet;
 
-struct canbus_device {
+typedef struct {
     CAN_HandleTypeDef *hcan;
     CAN_TxHeaderTypeDef *tx_header;
     uint32_t tx_mailbox;
     canbus_packet rx_packet;
-};
+} canbus_device_t;
 
-void canbus_device_init(struct canbus_device *dev, CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *tx_header);
+void canbus_device_init(canbus_device_t *dev, CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *tx_header);
+
+#endif

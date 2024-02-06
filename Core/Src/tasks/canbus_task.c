@@ -19,16 +19,16 @@
  */
 void canbus_task_fn(void *arg);
 
-TaskHandle_t canbus_task_start(struct app_data *data) {
+TaskHandle_t canbus_task_start(app_data_t *data) {
     TaskHandle_t handle;
     xTaskCreate(canbus_task_fn, "CANBus Task", 128, (void *)data, 8, &handle);
     return handle;
 }
 
 void canbus_task_fn(void *arg) {
-    struct app_data *data = (struct app_data *)arg;
+    app_data_t *data = (app_data_t *)arg;
 
-    struct canbus_device *canbus_device = &data->board.canbus_device;
+    canbus_device_t *canbus_device = &data->board.canbus_device;
     CAN_HandleTypeDef *hcan = canbus_device->hcan;
     CAN_TxHeaderTypeDef *tx_header = data->board.canbus_device.tx_header;
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
@@ -56,5 +56,6 @@ void canbus_task_fn(void *arg) {
             }
         }
     }
+    (void)can_status; // TODO: remove once this variable is removed
 }
 

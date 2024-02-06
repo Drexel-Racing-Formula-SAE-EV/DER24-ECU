@@ -11,7 +11,6 @@
 
 #include "app.h"
 #include "tasks/bse_task.h"
-#include "tasks/dev_task.h"
 #include "tasks/rtd_task.h"
 #include "tasks/error_task.h"
 #include "tasks/bse_task.h"
@@ -21,7 +20,7 @@
 #include "tasks/cli_task.h"
 #include <string.h>
 
-struct app_data app = {0};
+app_data_t app = {0};
 
 void app_create() {
 	app.rtdFlag = false;
@@ -40,6 +39,7 @@ void app_create() {
 
 	board_init(&app.board);
 	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
+
 	assert(app.cli_task = cli_task_start(&app));
 	assert(app.rtd_task = rtd_task_start(&app));
 	assert(app.error_task = error_task_start(&app));

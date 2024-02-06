@@ -9,6 +9,9 @@
 *
 */
 
-#pragma once
+#ifndef __MAP_H_
+#define __MAP_H_
 
 long double map(long x, long in_min, long in_max, long out_min, long out_max);
+
+#endif

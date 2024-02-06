@@ -9,7 +9,8 @@
 *
 */
 
-#pragma once
+#ifndef __APP_H_
+#define __APP_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -47,7 +48,7 @@
 #define BAMOCAR_CANBUS_RXID 0x201
 #define BAMOCAR_CANBUS_TORQUE_CMD 0x90
 
-struct app_data {
+typedef struct {
 	float throttlePercent;
 	float brakePercent;
 
@@ -62,7 +63,7 @@ struct app_data {
 	
 	bool brakeLightState;
 
-	struct board board;
+	board_t board;
 
 	TaskHandle_t dev_task;
 	TaskHandle_t cli_task;
@@ -72,8 +73,10 @@ struct app_data {
 	TaskHandle_t bse_task;
 	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
-};
+} app_data_t;
 
 void app_create();
 
 void cli_putline(char *line);
+
+#endif

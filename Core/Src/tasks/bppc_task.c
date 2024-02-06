@@ -19,7 +19,7 @@
 */
 void bppc_task_fn(void *arg);
 
-TaskHandle_t bppc_task_start(struct app_data *data)
+TaskHandle_t bppc_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
    xTaskCreate(bppc_task_fn, "BPPC task", 128, (void *)data, 8, &handle);
@@ -27,7 +27,7 @@ TaskHandle_t bppc_task_start(struct app_data *data)
 }
 
 void bppc_task_fn(void *arg){
-    struct app_data *data = (struct app_data *)arg;
+    app_data_t *data = (app_data_t *)arg;
 	   
     uint32_t entryTicksCount;
 	bool brakesEnganged = false;

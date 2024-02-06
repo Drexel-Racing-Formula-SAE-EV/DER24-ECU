@@ -30,8 +30,8 @@ void get_time(char *arg);
 void get_faults(char *arg);
 
 char line[256];
-struct app_data *ad;
-command cmds[] = 
+app_data_t *data;
+command_t cmds[] =
 {
 	{"help", &help, "print help menu"},
 	{"get throttle", &get_throttle, "get the throttle percentage"},
@@ -41,21 +41,20 @@ command cmds[] =
 	{"get fault", &get_faults, "gets the faults of the system"}
 };
 
-TaskHandle_t cli_task_start(struct app_data *data){
+TaskHandle_t cli_task_start(app_data_t *data){
    TaskHandle_t handle;
    xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 10, &handle);
    return handle;
 }
 
 void cli_task_fn(void *arg){
-    struct app_data *data = (struct app_data *)arg;
-	ad = data;
-	struct cli_device *cli = &data->board.cli;
+    data = (app_data_t *)arg;
+	cli_device_t *cli = &data->board.cli;
     uint32_t taskNotification;
 	int num_cmds;
 	int i;
 	
-	num_cmds = sizeof(cmds) / sizeof(command);
+	num_cmds = sizeof(cmds) / sizeof(command_t);
 
 	cli_putline("DREV ECU Firmware Version 0.1");
 	cli_putline("Type 'help' for help");
@@ -94,7 +93,7 @@ void help(char *arg) {
 	int i;
 
 	cli_putline("---------- Help Menu ----------");
-	num_cmds = sizeof(cmds) / sizeof(command);
+	num_cmds = sizeof(cmds) / sizeof(command_t);
 	for(i = 0; i < num_cmds; i++){
 		snprintf(line, 256, "%s - %s", cmds[i].name, cmds[i].desc);
 		cli_putline(line);
@@ -102,18 +101,18 @@ void help(char *arg) {
 }
 
 void get_throttle(char *arg){
-	float x = ad->throttlePercent;
+	float x = data->throttlePercent;
 	snprintf(line, 256, "throttle: %6.2f%%", x);
 	cli_putline(line);
 }
 
 void get_brakelight(char *arg){
-	snprintf(line, 256, "brakelight: %s", ad->brakeLightState ? "ON" : "OFF");
+	snprintf(line, 256, "brakelight: %s", data->brakeLightState ? "ON" : "OFF");
 	cli_putline(line);
 }
 
 void get_brake(char *arg){
-	float x = ad->brakePercent;
+	float x = data->brakePercent;
 	snprintf(line, 256, "brake: %6.2f%%", x);
 	cli_putline(line);
 }
@@ -125,19 +124,19 @@ void get_time(char *arg){
 void get_faults(char *arg){
 	cli_putline("System faults:");
 
-	snprintf(line, 256, "hard: %d", ad->hardSystemFault);
+	snprintf(line, 256, "hard: %d", data->hardSystemFault);
 	cli_putline(line);
 
-	snprintf(line, 256, "soft: %d", ad->softSystemFault);
+	snprintf(line, 256, "soft: %d", data->softSystemFault);
 	cli_putline(line);
 
-	snprintf(line, 256, "apps: %d", ad->appsFaultFlag);
+	snprintf(line, 256, "apps: %d", data->appsFaultFlag);
 	cli_putline(line);
 
-	snprintf(line, 256, "bse:  %d", ad->bseFaultFlag);
+	snprintf(line, 256, "bse:  %d", data->bseFaultFlag);
 	cli_putline(line);
 
-	snprintf(line, 256, "bppc: %d", ad->bppcFaultFlag);
+	snprintf(line, 256, "bppc: %d", data->bppcFaultFlag);
 	cli_putline(line);
 }
 

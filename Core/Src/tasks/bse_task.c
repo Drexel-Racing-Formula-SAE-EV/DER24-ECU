@@ -19,7 +19,7 @@
 */
 void bse_task_fn(void *arg);
 
-TaskHandle_t bse_task_start(struct app_data *data)
+TaskHandle_t bse_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
    xTaskCreate(bse_task_fn, "BSE task", 128, (void *)data, 7, &handle);
@@ -27,9 +27,9 @@ TaskHandle_t bse_task_start(struct app_data *data)
 }
 
 void bse_task_fn(void *arg){
-    struct app_data *data = (struct app_data *)arg;
-    struct pressTrans *bse1 = &data->board.bse1;
-    struct pressTrans *bse2 = &data->board.bse2;
+    app_data_t *data = (app_data_t *)arg;
+    pressure_sensor_t *bse1 = &data->board.bse1;
+    pressure_sensor_t *bse2 = &data->board.bse2;
     bool newBrakeLightState;
 
     uint32_t entryTicksCount;
@@ -44,11 +44,11 @@ void bse_task_fn(void *arg){
 		bse2->count = bse2->read_count(bse2->handle);
 
 		// Calculate Percentage
-		bse1->percent = presstransGetPercent(bse1);
-		bse2->percent = presstransGetPercent(bse2);
+		bse1->percent = pressure_sensor_get_percent(bse1);
+		bse2->percent = pressure_sensor_get_percent(bse2);
 
 		// T.4.3.3 (2022)
-		if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+		if(!pressure_sensor_check_implausibility(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
 			data->bseFaultFlag = true;
 		}
 

@@ -19,14 +19,14 @@
 */
 void rtd_task_fn(void *arg);
 
-TaskHandle_t rtd_task_start(struct app_data *data){
+TaskHandle_t rtd_task_start(app_data_t *data){
    TaskHandle_t handle;
    xTaskCreate(rtd_task_fn, "RTD task", 128, (void *)data, 20, &handle);
    return handle;
 }
 
 void rtd_task_fn(void *arg){
-    struct app_data *data = (struct app_data *)arg;
+    app_data_t *data = (app_data_t *)arg;
 	
 	bool tsalHV = false;
 	bool brakesEngaged = false;
