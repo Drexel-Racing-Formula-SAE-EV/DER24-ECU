@@ -9,8 +9,8 @@
 *
 */
 
-#include "ext_drivers/stm32f767.h"
 #include "main.h"
+#include "ext_drivers/stm32f767.h"
 #include "ext_drivers/canbus.h"
 
 extern ADC_HandleTypeDef hadc1;

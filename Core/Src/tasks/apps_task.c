@@ -44,10 +44,11 @@ void apps_task_fn(void *arg) {
         TxPacket.data[i] = 0x00;
     }
 
+    // TODO: Update CANBUS Logic
     // Set CANBus Receiving ID in header
-    TxPacket.id = BAMOCAR_CANBUS_RXID;
+    TxPacket.id = MTR_CANBUS_RXID;
     // Set the command identifier to be Torque Command
-    TxPacket.data[0] = BAMOCAR_CANBUS_TORQUE_CMD;
+    TxPacket.data[0] = 0x90;
 
     while(1){
         entryTicksCount = osKernelGetTickCount();

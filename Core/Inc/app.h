@@ -45,9 +45,6 @@
 #define APPS2_MIN 810
 #define APPS2_MAX 2158
 
-#define BAMOCAR_CANBUS_RXID 0x201
-#define BAMOCAR_CANBUS_TORQUE_CMD 0x90
-
 typedef struct {
 	float throttlePercent;
 	float brakePercent;
