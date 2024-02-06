@@ -20,6 +20,21 @@
 #include "ext_drivers/canbus.h"
 #include "ext_drivers/cli.h"
 
+// 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
+#define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
+#define BSE1_MAX 2238 //Brake emulator max: 2240 //Theoretical value (ADC max): 1900
+// 0.14V -1.8V *(3/2) => 0.21V - 2.7V
+#define BSE2_MIN 175 //Brake emulator min: 175 //Theoretical value (ADC max): 810
+#define BSE2_MAX 2250 //Brake emulator max: 2250 //Theoretical value (ADC max): 2158
+
+#define BSE1_ADC_CH 13
+#define BSE2_ADC_CH 9
+
+#define APPS1_MIN 339
+#define APPS1_MAX 1900
+#define APPS2_MIN 810
+#define APPS2_MAX 2158
+
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
 

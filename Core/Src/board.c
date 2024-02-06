@@ -10,9 +10,7 @@
  */
 
 #include "board.h"
-#include "app.h" //TODO: determine use
-
-extern app_data_t app;
+#include "main.h"
 
 void board_init(board_t *dev) {
 	stm32f767_init(&dev->stm32f767);
@@ -27,6 +25,7 @@ void board_init(board_t *dev) {
 	cli_device_init(&dev->cli, &dev->stm32f767.huart7);
 }
 
+// TODO: Change this
 uint16_t ADC_read_count(void *hadc) {
 	uint16_t count;
 
