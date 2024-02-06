@@ -12,11 +12,11 @@
 #ifndef __BOARD_H_
 #define __BOARD_H_
 
-#include <ext_drivers/pressure_sensor.h>
 #include <stdbool.h>
 
 #include "ext_drivers/stm32f767.h"
 #include "ext_drivers/poten.h"
+#include <ext_drivers/pressure_sensor.h>
 #include "ext_drivers/canbus.h"
 #include "ext_drivers/cli.h"
 

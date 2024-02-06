@@ -12,7 +12,7 @@
 #ifndef __STM32F767_H_
 #define __STM32F767_H_
 
-#include <stm32f7xx_hal.h>
+#include "stm32f7xx_hal.h"
 #include "cmsis_os.h"
 
 typedef struct {

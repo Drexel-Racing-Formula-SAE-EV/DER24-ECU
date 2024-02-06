@@ -12,8 +12,9 @@
 #ifndef __ERROR_TASK_H_
 #define __ERROR_TASK_H_
 
-#include "cmsis_os.h"
 #include "app.h"
+
+#include "cmsis_os.h"
 
 /**
  * @brief Starts the ERROR task

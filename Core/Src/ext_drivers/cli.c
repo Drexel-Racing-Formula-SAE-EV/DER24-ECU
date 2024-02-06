@@ -11,7 +11,8 @@
 
 #include "ext_drivers/cli.h"
 
-void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart){
+void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart)
+{
     dev->huart = huart;
     dev->index = 0;
     dev->msg_pending = false;

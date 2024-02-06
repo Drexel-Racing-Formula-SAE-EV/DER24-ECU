@@ -13,7 +13,8 @@
 #define __PRESSURE_SENSOR_H_
 
 #include <stdint.h>
-#include <stm32f7xx_hal.h>
+
+#include "stm32f7xx_hal.h"
 
 typedef struct {
 	uint16_t min;

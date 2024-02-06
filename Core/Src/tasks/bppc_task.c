@@ -26,7 +26,8 @@ TaskHandle_t bppc_task_start(app_data_t *data)
    return handle;
 }
 
-void bppc_task_fn(void *arg){
+void bppc_task_fn(void *arg)
+{
     app_data_t *data = (app_data_t *)arg;
 	   
     uint32_t entryTicksCount;
@@ -34,7 +35,8 @@ void bppc_task_fn(void *arg){
 	bool throttleEngaged = false;
 	bool throttleReleased = true;
 
-	while(1){
+	for(;;)
+	{
 		entryTicksCount = osKernelGetTickCount();
 
 		brakesEnganged = (data->brakePercent > BPPC_BSE_THRESH);
@@ -42,11 +44,15 @@ void bppc_task_fn(void *arg){
 		throttleReleased = (data->throttlePercent < BPPC_APPS_L_THRESH);
 
 		// EV.5.7 (2022)
-		if(data->bppcFaultFlag == true){
-			if(throttleReleased){
+		if(data->bppcFaultFlag == true)
+		{
+			if(throttleReleased)
+			{
 				data->bppcFaultFlag = false;
 			}
-		}else if(brakesEnganged && throttleEngaged){
+		}
+		else if(brakesEnganged && throttleEngaged)
+		{
 			data->bppcFaultFlag = true;
 		}
 

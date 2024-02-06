@@ -12,8 +12,9 @@
 #ifndef __CANBUS_TASK_H_
 #define __CANBUS_TASK_H_
 
-#include "cmsis_os.h"
 #include "app.h"
+
+#include "cmsis_os.h"
 
 /**
  * @brief Starts the CANBus task

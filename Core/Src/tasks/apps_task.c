@@ -23,13 +23,15 @@
  */
 void apps_task_fn(void *arg);
 
-TaskHandle_t apps_task_start(app_data_t *data) {
+TaskHandle_t apps_task_start(app_data_t *data)
+{
     TaskHandle_t handle;
     xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 7, &handle);
     return handle;
 }
 
-void apps_task_fn(void *arg) {
+void apps_task_fn(void *arg)
+{
     app_data_t *data = (app_data_t *)arg;
     poten_t *apps1 = &data->board.apps1;
     poten_t *apps2 = &data->board.apps2;
@@ -40,7 +42,8 @@ void apps_task_fn(void *arg) {
     uint32_t entryTicksCount;
 
     // Initialize all CANBus data values to 0
-    for(uint8_t i = 0; i < 8; i++){
+    for(uint8_t i = 0; i < 8; i++)
+    {
         TxPacket.data[i] = 0x00;
     }
 
@@ -50,7 +53,8 @@ void apps_task_fn(void *arg) {
     // Set the command identifier to be Torque Command
     TxPacket.data[0] = 0x90;
 
-    while(1){
+    for(;;)
+    {
         entryTicksCount = osKernelGetTickCount();
 
         // Read throttle
@@ -60,22 +64,27 @@ void apps_task_fn(void *arg) {
         apps1->percent = poten_get_percent(apps2);
 
         // T.4.2.5 (2022)
-        if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
+        if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10))
+        {
             data->appsFaultFlag = true;
         }
 
         data->throttlePercent = (apps1->percent + apps2->percent) / 2;
 
-        if(data->hardSystemFault || data->softSystemFault){
+        if(data->hardSystemFault || data->softSystemFault)
+        {
             TxPacket.data[1] = 0x00;
             TxPacket.data[2] = 0x00;
-        }else{
+        }
+        else
+        {
             throttleHex = poten_percent_to_hex(data->throttlePercent);
             TxPacket.data[1] = TO_LSB(throttleHex);
             TxPacket.data[2] = TO_MSB(throttleHex);
         }
 
-        if(data->rtdFlag){
+        if(data->rtdFlag)
+        {
             // Give torque command to CANBus Task
             osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
             xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);

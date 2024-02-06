@@ -19,31 +19,39 @@
  */
 void error_task_fn(void *arg);
 
-TaskHandle_t error_task_start(app_data_t *data) {
+TaskHandle_t error_task_start(app_data_t *data)
+{
     TaskHandle_t handle;
     xTaskCreate(error_task_fn, "ERROR task", 128, (void *)data, 10, &handle);
     return handle;
 }
 
-void error_task_fn(void *arg) {
+void error_task_fn(void *arg)
+{
 	app_data_t *data = (app_data_t *)arg;
 
     uint32_t entryTicksCount;
 
-    while(1){
+    for(;;)
+    {
         entryTicksCount = osKernelGetTickCount();
 
-        if(!data->hardSystemFault){
-            if(data->appsFaultFlag || data->bseFaultFlag){
+        if(!data->hardSystemFault)
+        {
+            if(data->appsFaultFlag || data->bseFaultFlag)
+            {
                 data->hardSystemFault = true;
                 setMotorEn(0);
             }
         }
         
-        if(data->bppcFaultFlag){
+        if(data->bppcFaultFlag)
+        {
             data->softSystemFault = true;
             setMotorEn(0);
-        }else{
+        }
+        else
+        {
             data->softSystemFault = false;
             setMotorEn(1);
         }

@@ -26,7 +26,8 @@ TaskHandle_t bse_task_start(app_data_t *data)
    return handle;
 }
 
-void bse_task_fn(void *arg){
+void bse_task_fn(void *arg)
+{
     app_data_t *data = (app_data_t *)arg;
     pressure_sensor_t *bse1 = &data->board.bse1;
     pressure_sensor_t *bse2 = &data->board.bse2;
@@ -34,7 +35,8 @@ void bse_task_fn(void *arg){
 
     uint32_t entryTicksCount;
 
-	while(1){
+	for(;;)
+	{
 		entryTicksCount = osKernelGetTickCount();
 
 		// Read ADC channels for each BSE input
@@ -48,7 +50,8 @@ void bse_task_fn(void *arg){
 		bse2->percent = pressure_sensor_get_percent(bse2);
 
 		// T.4.3.3 (2022)
-		if(!pressure_sensor_check_implausibility(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+		if(!pressure_sensor_check_implausibility(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10))
+		{
 			data->bseFaultFlag = true;
 		}
 
@@ -57,7 +60,8 @@ void bse_task_fn(void *arg){
 
 		// Operate brake light
 		newBrakeLightState = (data->brakePercent >= BRAKE_LIGHT_THRESH);
-		if(data->brakeLightState != newBrakeLightState){
+		if(data->brakeLightState != newBrakeLightState)
+		{
 			data->brakeLightState = newBrakeLightState;
 			setBrakeLight(newBrakeLightState);
 		}

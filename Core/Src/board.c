@@ -12,7 +12,8 @@
 #include "board.h"
 #include "main.h"
 
-void board_init(board_t *dev) {
+void board_init(board_t *dev)
+{
 	stm32f767_init(&dev->stm32f767);
 
 	poten_init(&dev->apps1, APPS1_MIN, APPS1_MAX, &dev->stm32f767.hadc1, ADC_read_count);
@@ -26,7 +27,8 @@ void board_init(board_t *dev) {
 }
 
 // TODO: Change this
-uint16_t ADC_read_count(void *hadc) {
+uint16_t ADC_read_count(void *hadc)
+{
 	uint16_t count;
 
 	HAL_ADC_Start(hadc);
@@ -37,10 +39,12 @@ uint16_t ADC_read_count(void *hadc) {
 	return count;
 }
 
-void setBrakeLight(bool state){
+void setBrakeLight(bool state)
+{
 	HAL_GPIO_WritePin(Brake_Light_GPIO_Port, Brake_Light_Pin, state);
 }
 
-void setMotorEn(bool state){
+void setMotorEn(bool state)
+{
 	HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, state);
 }

@@ -13,7 +13,7 @@
 #define __CANBUS_H_
 
 #include "cmsis_os.h"
-#include <stm32f7xx_hal.h>
+#include "stm32f7xx_hal.h"
 
 #define DATALEN 8
 

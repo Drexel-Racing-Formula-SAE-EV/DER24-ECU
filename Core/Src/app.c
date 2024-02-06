@@ -22,7 +22,8 @@
 
 app_data_t app = {0};
 
-void app_create() {
+void app_create()
+{
 	app.rtdFlag = false;
 
 	app.hardSystemFault = false;
@@ -49,13 +50,17 @@ void app_create() {
 	assert(app.bppc_task = bppc_task_start(&app));
 }
 
-void cli_putline(char *line){
+void cli_putline(char *line)
+{
 	static char nl[] = "\r\n";
 	
-	if(xPortIsInsideInterrupt()){
+	if(xPortIsInsideInterrupt())
+	{
 		HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t *)line, strlen(line));
 		HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t*)nl, strlen(nl));
-	}else{
+	}
+	else
+	{
 		HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
 		HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
 	}

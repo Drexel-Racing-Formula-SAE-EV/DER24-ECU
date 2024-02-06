@@ -41,13 +41,15 @@ command_t cmds[] =
 	{"get fault", &get_faults, "gets the faults of the system"}
 };
 
-TaskHandle_t cli_task_start(app_data_t *data){
+TaskHandle_t cli_task_start(app_data_t *data)
+{
    TaskHandle_t handle;
    xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 10, &handle);
    return handle;
 }
 
-void cli_task_fn(void *arg){
+void cli_task_fn(void *arg)
+{
     data = (app_data_t *)arg;
 	cli_device_t *cli = &data->board.cli;
     uint32_t taskNotification;
@@ -59,15 +61,20 @@ void cli_task_fn(void *arg){
 	cli_putline("DREV ECU Firmware Version 0.1");
 	cli_putline("Type 'help' for help");
 
-	while(1){
+	for(;;)
+	{
 		xTaskNotifyWait(0, 0, &taskNotification, HAL_MAX_DELAY);
-		if(cli->msg_pending == true){
-			for(i = 0; i < num_cmds + 1; i++){
-				if(i == num_cmds){
+		if(cli->msg_pending == true)
+		{
+			for(i = 0; i < num_cmds + 1; i++)
+			{
+				if(i == num_cmds)
+				{
 					cmd_not_found(cli->line);
 					break;
 				}
-				if(!strncmp(cmds[i].name, cli->line, strlen(cmds[i].name))){
+				if(!strncmp(cmds[i].name, cli->line, strlen(cmds[i].name)))
+				{
 					cmds[i].func(cli->line);
 					break;
 				}
@@ -77,7 +84,8 @@ void cli_task_fn(void *arg){
 	}
 }
 
-void cmd_not_found(char *cmd){
+void cmd_not_found(char *cmd)
+{
 	snprintf(line, 256, "Command not found: \'%s\'", cmd);
 	cli_putline(line);
 	/*
@@ -88,40 +96,47 @@ void cmd_not_found(char *cmd){
 	*/
 }
 
-void help(char *arg) {
+void help(char *arg)
+{
 	int num_cmds;
 	int i;
 
 	cli_putline("---------- Help Menu ----------");
 	num_cmds = sizeof(cmds) / sizeof(command_t);
-	for(i = 0; i < num_cmds; i++){
+	for(i = 0; i < num_cmds; i++)
+	{
 		snprintf(line, 256, "%s - %s", cmds[i].name, cmds[i].desc);
 		cli_putline(line);
 	}
 }
 
-void get_throttle(char *arg){
+void get_throttle(char *arg)
+{
 	float x = data->throttlePercent;
 	snprintf(line, 256, "throttle: %6.2f%%", x);
 	cli_putline(line);
 }
 
-void get_brakelight(char *arg){
+void get_brakelight(char *arg)
+{
 	snprintf(line, 256, "brakelight: %s", data->brakeLightState ? "ON" : "OFF");
 	cli_putline(line);
 }
 
-void get_brake(char *arg){
+void get_brake(char *arg)
+{
 	float x = data->brakePercent;
 	snprintf(line, 256, "brake: %6.2f%%", x);
 	cli_putline(line);
 }
 
-void get_time(char *arg){
+void get_time(char *arg)
+{
 	cli_putline("time to get a watch");
 }
 
-void get_faults(char *arg){
+void get_faults(char *arg)
+{
 	cli_putline("System faults:");
 
 	snprintf(line, 256, "hard: %d", data->hardSystemFault);

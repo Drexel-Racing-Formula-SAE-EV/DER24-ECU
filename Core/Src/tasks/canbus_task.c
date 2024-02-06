@@ -25,7 +25,8 @@ TaskHandle_t canbus_task_start(app_data_t *data) {
     return handle;
 }
 
-void canbus_task_fn(void *arg) {
+void canbus_task_fn(void *arg)
+{
     app_data_t *data = (app_data_t *)arg;
 
     canbus_device_t *canbus_device = &data->board.canbus_device;
@@ -37,17 +38,22 @@ void canbus_task_fn(void *arg) {
     osStatus_t mq_status;
     uint32_t taskNotification;
 
-    while(1) {
+    for(;;)
+    {
         xTaskNotifyWait(CANBUS_ISR | CANBUS_APPS, 0, &taskNotification, HAL_MAX_DELAY);
         // Pull canbus packet from data queue
         mq_status = osMessageQueueGet(canbus_mq, &can_packet, NULL, HAL_MAX_DELAY);
         // Upon successful message acquisition
-        if(mq_status == osOK){
-            if(taskNotification & CANBUS_APPS){
+        if(mq_status == osOK)
+        {
+            if(taskNotification & CANBUS_APPS)
+            {
             	// Message from APPS task
             	tx_header->StdId = can_packet.id;
             	can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus_device->tx_mailbox);
-            }else if(taskNotification & CANBUS_ISR){
+            }
+            else if(taskNotification & CANBUS_ISR)
+            {
             	// Message from CANBus Received ISR
             	// TODO: Implement data logging function
             	// this is BS line for breakpoint testing, will be removed once logging is setup

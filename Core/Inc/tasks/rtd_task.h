@@ -12,8 +12,9 @@
 #ifndef __RTD_TASK_H_
 #define __RTD_TASK_H_
 
-#include "cmsis_os.h"
 #include "app.h"
+
+#include "cmsis_os.h"
 
 /**
 * @brief Starts the RTD task

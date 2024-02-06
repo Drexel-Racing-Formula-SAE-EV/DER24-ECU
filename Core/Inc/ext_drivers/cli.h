@@ -14,7 +14,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stm32f7xx_hal.h>
+
+#include "stm32f7xx_hal.h"
 
 #define CLI_LINE_SIZE 32
 
