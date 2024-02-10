@@ -108,6 +108,12 @@ void MX_ADC2_Init(void);
 #define Brake_Light_GPIO_Port GPIOD
 #define SPI6_NSS_Pin GPIO_PIN_8
 #define SPI6_NSS_GPIO_Port GPIOG
+#define TMS_Pin GPIO_PIN_13
+#define TMS_GPIO_Port GPIOA
+#define TCK_Pin GPIO_PIN_14
+#define TCK_GPIO_Port GPIOA
+#define SWO_Pin GPIO_PIN_3
+#define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
