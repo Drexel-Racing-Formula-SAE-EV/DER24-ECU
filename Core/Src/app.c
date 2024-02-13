@@ -54,15 +54,18 @@ void cli_putline(char *line)
 {
 	static char nl[] = "\r\n";
 	
+	HAL_StatusTypeDef ret = 0;
+
 	if(xPortIsInsideInterrupt())
 	{
-		HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t *)line, strlen(line));
-		HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t*)nl, strlen(nl));
+		ret |= HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t *)line, strlen(line));
+		ret |= HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t*)nl, strlen(nl));
 	}
 	else
 	{
-		HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
-		HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
+		ret |= HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
+		ret |= HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
 	}
+	ret = 0;
 }
 

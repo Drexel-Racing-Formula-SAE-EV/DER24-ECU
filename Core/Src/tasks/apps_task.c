@@ -55,6 +55,7 @@ void apps_task_fn(void *arg)
 
     for(;;)
     {
+    	cli_putline("this is apps test");
         entryTicksCount = osKernelGetTickCount();
 
         // Read throttle

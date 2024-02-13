@@ -93,7 +93,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 	dev->hspi6 = hspi6;
 
 	dev->huart3 = huart3;
-	dev->huart3 = huart7;
+	dev->huart7 = huart7;
 
 	dev->can1_mutex = osMutexNew(&can1_mutex_attr);
 	assert(dev->can1_mutex);
