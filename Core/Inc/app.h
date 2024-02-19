@@ -25,10 +25,12 @@
 #define BPPC_APPS_L_THRESH 5
 #define RTD_BSE_THRESH 10
 
-#define APPS_FREQ 200
+#define APPS_FREQ 100
 #define ERROR_FREQ 50
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
+
+#define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
 typedef struct {
 	float throttlePercent;

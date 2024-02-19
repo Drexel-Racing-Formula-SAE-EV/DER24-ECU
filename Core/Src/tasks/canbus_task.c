@@ -33,7 +33,7 @@ void canbus_task_fn(void *arg)
     CAN_HandleTypeDef *hcan = canbus_device->hcan;
     CAN_TxHeaderTypeDef *tx_header = data->board.canbus_device.tx_header;
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
-    canbus_packet can_packet;
+    canbus_packet_t can_packet;
     HAL_StatusTypeDef can_status;
     osStatus_t mq_status;
     uint32_t taskNotification;

@@ -84,7 +84,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 	dev->hadc3 = hadc3;
 
 	dev->hcan1 = hcan1;
-	dev->can1_mq = osMessageQueueNew(128, sizeof(canbus_packet), NULL);
+	dev->can1_mq = osMessageQueueNew(128, sizeof(canbus_packet_t), NULL);
 
 	dev->hi2c2 = hi2c2;
 

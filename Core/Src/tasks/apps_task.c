@@ -14,7 +14,7 @@
 #include "ext_drivers/canbus.h"
 
 #define TO_LSB(x) (x & 0xff)
-#define TO_MSB(x) (x >> 8)
+#define TO_MSB(x) (x >> 8) & 0xff
 
 /**
  * @brief Actual APPS task function
@@ -38,7 +38,7 @@ void apps_task_fn(void *arg)
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
     uint16_t throttleHex;
-    canbus_packet TxPacket;
+    canbus_packet_t TxPacket;
     uint32_t entryTicksCount;
 
     // Initialize all CANBus data values to 0
@@ -47,11 +47,8 @@ void apps_task_fn(void *arg)
         TxPacket.data[i] = 0x00;
     }
 
-    // TODO: Update CANBUS Logic
     // Set CANBus Receiving ID in header
-    TxPacket.id = MTR_CANBUS_RXID;
-    // Set the command identifier to be Torque Command
-    TxPacket.data[0] = 0x90;
+    TxPacket.id = MTR_CMD_ID;
 
     for(;;)
     {
@@ -73,14 +70,26 @@ void apps_task_fn(void *arg)
 
         if(data->hardSystemFault || data->softSystemFault)
         {
-            TxPacket.data[1] = 0x00;
-            TxPacket.data[2] = 0x00;
+            TxPacket.data[0] = 0;
+            TxPacket.data[1] = 0;
+            TxPacket.data[2] = 0;
+            TxPacket.data[3] = 0;
+            TxPacket.data[4] = 1; // Forward direction
+            TxPacket.data[5] = 0; // Disable inverter
+            TxPacket.data[6] = 0;
+            TxPacket.data[7] = 0;
         }
         else
         {
-            throttleHex = poten_percent_to_hex(data->throttlePercent);
-            TxPacket.data[1] = TO_LSB(throttleHex);
-            TxPacket.data[2] = TO_MSB(throttleHex);
+            throttleHex = (uint16_t)(data->throttlePercent * MAXTRQ / 10.0); // CM CANBus Protocol
+            TxPacket.data[0] = TO_LSB(throttleHex);
+            TxPacket.data[1] = TO_MSB(throttleHex);
+            TxPacket.data[2] = 0;
+            TxPacket.data[3] = 0;
+            TxPacket.data[4] = 1; // Forward direction
+            TxPacket.data[5] = 1; // Enable inverter
+            TxPacket.data[6] = 0;
+            TxPacket.data[7] = 0;
         }
 
         if(data->rtdFlag)

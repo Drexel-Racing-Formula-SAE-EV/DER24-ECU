@@ -38,7 +38,7 @@
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
 
-#define MTR_CANBUS_RXID 0x201
+#define MTR_CMD_ID 0x0C0
 
 typedef struct {
 	// Physical devices on the board

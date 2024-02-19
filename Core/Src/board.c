@@ -21,7 +21,7 @@ void board_init(board_t *dev)
 	pressure_sensor_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, BSE1_ADC_CH, ADC_read_count);
 	pressure_sensor_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, BSE2_ADC_CH, ADC_read_count);
 
-	canbus_device_init(&dev->canbus_device, MTR_CANBUS_RXID, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
+	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 
 	cli_device_init(&dev->cli, &dev->stm32f767.huart7);
 }
