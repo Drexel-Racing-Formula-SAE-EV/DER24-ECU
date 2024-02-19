@@ -41,14 +41,17 @@ void apps_task_fn(void *arg)
     canbus_packet_t TxPacket;
     uint32_t entryTicksCount;
 
-    // Initialize all CANBus data values to 0
     for(uint8_t i = 0; i < 8; i++)
     {
         TxPacket.data[i] = 0x00;
     }
 
-    // Set CANBus Receiving ID in header
     TxPacket.id = MTR_CMD_ID;
+
+    while(!data->rtdFlag) osDelay(10);
+
+    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
+    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
     {

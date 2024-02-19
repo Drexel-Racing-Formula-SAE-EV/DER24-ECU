@@ -29,12 +29,22 @@ TaskHandle_t rtd_task_start(app_data_t *data)
 void rtd_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
+
+    canbus_packet_t TxPacket;
+    osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 	
 	bool tsalHV = false;
 	bool brakesEngaged = false;
 	bool rtdButton = false;
+	bool motorOk = false;
 
 	data->rtdFlag = false;
+
+    for(uint8_t i = 0; i < 8; i++)
+    {
+        TxPacket.data[i] = 0x00;
+    }
+    TxPacket.id = MTR_CMD_ID;
 
 	for(;;)
 	{
@@ -45,8 +55,13 @@ void rtd_task_fn(void *arg)
 			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
 			brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
 			rtdButton = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
+			motorOk = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
 
-			if(tsalHV && brakesEngaged && rtdButton) data->rtdFlag = true;
+		    // Send Inverter Disable
+		    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
+		    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
+
+			if(tsalHV && brakesEngaged && rtdButton && motorOk) data->rtdFlag = true;
 		}
 		else
 		{
@@ -56,6 +71,6 @@ void rtd_task_fn(void *arg)
 			while(1) osDelay(1000);
 		}
 		
-		osDelay(1);
+		osDelay(10);
 	}
 }
