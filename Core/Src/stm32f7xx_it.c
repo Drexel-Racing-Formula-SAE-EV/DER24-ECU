@@ -22,6 +22,9 @@
 #include "stm32f7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cmsis_os.h"
+#include "app.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +44,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -51,15 +53,17 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#if 0
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN EV */
-
+#endif
+extern TIM_HandleTypeDef htim7;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -166,7 +170,9 @@ void DebugMon_Handler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
+	extern app_data_t app;
 
+	UART_HandleTypeDef huart3 = *app.board.cli.huart;
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
@@ -188,6 +194,54 @@ void TIM7_IRQHandler(void)
   /* USER CODE END TIM7_IRQn 1 */
 }
 
-/* USER CODE BEGIN 1 */
+/**
+  * @brief This function handles UART7 global interrupt.
+  */
+void UART7_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART7_IRQn 0 */
+	extern app_data_t app;
 
+	UART_HandleTypeDef huart7 = *app.board.cli.huart;
+  /* USER CODE END UART7_IRQn 0 */
+  HAL_UART_IRQHandler(&huart7);
+  /* USER CODE BEGIN UART7_IRQn 1 */
+
+  /* USER CODE END UART7_IRQn 1 */
+}
+
+/* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	extern app_data_t app;
+	uint8_t endl[] = "\r\n";
+
+	cli_device_t *cli = &app.board.cli;
+
+	if(cli->huart == huart){
+		if(cli->c == '\n'){
+			HAL_UART_Transmit_IT(huart, endl, strlen(endl));
+			cli->line[cli->index] = '\0';
+			cli->index = 0;
+			// handle cmd
+			if(strlen(cli->line) > 0){
+				cli->msg_pending = true;
+				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, NULL);
+			}
+		}else if(cli->c == '\r'){
+			// ignore return carriage
+		}else if(cli->c == 127){
+			uint8_t del = 127;
+			cli->index--;
+			cli->line[cli->index] = ' ';
+			HAL_UART_Transmit_IT(huart, &del, 1);
+			HAL_UART_Transmit_IT(huart, &cli->line[cli->index], 1);
+			HAL_UART_Transmit_IT(huart, &del, 1);
+		}else if(cli->c >= 32 && cli->c <= 126){
+			cli->line[cli->index++] = cli->c;
+			HAL_UART_Transmit_IT(huart, &cli->c, 1);
+		}
+
+		HAL_UART_Receive_IT(huart, &cli->c, 1);
+	}
+}
 /* USER CODE END 1 */

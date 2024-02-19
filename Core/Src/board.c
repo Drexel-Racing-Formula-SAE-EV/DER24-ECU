@@ -23,7 +23,7 @@ void board_init(board_t *dev)
 
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 
-	cli_device_init(&dev->cli, &dev->stm32f767.huart7);
+	cli_device_init(&dev->cli, &dev->stm32f767.huart3);
 }
 
 // TODO: Change this
