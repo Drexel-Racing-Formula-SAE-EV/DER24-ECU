@@ -35,9 +35,9 @@ typedef struct {
 
 	osMutexId_t can1_mutex;
 	osMutexId_t i2c2_mutex;
-	osMutexId_t spi4_mutex;
 	osMutexId_t spi6_mutex;
 	osMutexId_t	uart3_mutex;
+	osMutexId_t	uart7_mutex;
 	osMessageQueueId_t can1_mq;
 
 	CAN_TxHeaderTypeDef can1_txheader;

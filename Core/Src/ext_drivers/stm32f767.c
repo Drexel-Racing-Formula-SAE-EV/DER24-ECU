@@ -44,13 +44,6 @@ const osMutexAttr_t i2c2_mutex_attr = {
 	.cb_size = 0UL,
 };
 
-const osMutexAttr_t spi4_mutex_attr = {
-	.name = "SPI 4 Mutex",
-	.attr_bits = osMutexPrioInherit | osMutexRecursive,
-	.cb_mem = NULL,
-	.cb_size = 0UL,
-};
-
 const osMutexAttr_t spi6_mutex_attr = {
 	.name = "SPI 6 Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
@@ -60,6 +53,13 @@ const osMutexAttr_t spi6_mutex_attr = {
 
 const osMutexAttr_t uart3_mutex_attr = {
 	.name = "UART 3 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
+const osMutexAttr_t uart7_mutex_attr = {
+	.name = "UART 7 Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
@@ -101,12 +101,12 @@ void stm32f767_init(stm32f767_device_t *dev)
 	dev->i2c2_mutex = osMutexNew(&i2c2_mutex_attr);
 	assert(dev->i2c2_mutex);
 
-	dev->spi4_mutex = osMutexNew(&spi4_mutex_attr);
-	assert(dev->spi4_mutex);
-
 	dev->spi6_mutex = osMutexNew(&spi6_mutex_attr);
 	assert(dev->spi6_mutex);
 
 	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
+
+	dev->uart7_mutex = osMutexNew(&uart7_mutex_attr);
+	assert(dev->uart7_mutex);
 }
