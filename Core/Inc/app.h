@@ -26,6 +26,7 @@
 #define RTD_BSE_THRESH 10
 
 #define APPS_FREQ 100
+#define ACC_FREQ 10
 #define ERROR_FREQ 50
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
@@ -57,6 +58,7 @@ typedef struct {
 	TaskHandle_t bse_task;
 	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
+	TaskHandle_t acc_task;
 } app_data_t;
 
 void app_create();

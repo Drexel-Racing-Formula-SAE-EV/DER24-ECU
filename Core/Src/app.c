@@ -8,6 +8,7 @@
 * @copyright Copyright (c) 2023
 *
 */
+#include <string.h>
 
 #include "app.h"
 #include "tasks/bse_task.h"
@@ -18,7 +19,7 @@
 #include "tasks/apps_task.h"
 #include "tasks/canbus_task.h"
 #include "tasks/cli_task.h"
-#include <string.h>
+#include "tasks/acc_task.h"
 
 app_data_t app = {0};
 
@@ -48,6 +49,7 @@ void app_create()
 	assert(app.bse_task = bse_task_start(&app));
 	assert(app.apps_task = apps_task_start(&app));
 	assert(app.bppc_task = bppc_task_start(&app));
+	assert(app.acc_task = acc_task_start(&app));
 }
 
 void cli_putline(char *line)
