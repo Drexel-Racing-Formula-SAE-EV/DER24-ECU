@@ -33,6 +33,7 @@ void app_create()
 	app.appsFaultFlag = false;
 	app.bseFaultFlag = false;
 	app.bppcFaultFlag = false;
+	app.accFaultFlag = false;
 
 	app.brakeLightState = false;
 

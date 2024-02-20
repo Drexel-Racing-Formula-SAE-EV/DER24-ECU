@@ -51,12 +51,10 @@ int mpu6050_read(mpu6050_device_t *dev){
 
 	ret = HAL_I2C_Mem_Read(dev->hi2c, (dev->addr_7bit << 1), ACCEL_XOUT_H, 1, data, 14, 200);
 
-    //temp = ((float)(((uint16_t)data[6] << 8) | data[7]) / 340.0) + 36.53;
-
     int x_accR = ((int)data[0] << 8) | data[1];
     int y_accR = ((int)data[2] << 8) | data[3];
     int z_accR = ((int)data[4] << 8) | data[5];
-
+    //float temp = ((float)(((uint16_t)data[6] << 8) | data[7]) / 340.0) + 36.53;
     int x_gyroR = ((int)data[8] << 8) | data[9];
     int y_gyroR = ((int)data[10] << 8) | data[11];
     int z_gyroR = ((int)data[12] << 8) | data[13];
