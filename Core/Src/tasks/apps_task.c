@@ -45,17 +45,10 @@ void apps_task_fn(void *arg)
     {
         TxPacket.data[i] = 0x00;
     }
-
     TxPacket.id = MTR_CMD_ID;
-
-    while(!data->rtdFlag) osDelay(10);
-
-    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
-    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
     {
-    	cli_putline("this is apps test");
         entryTicksCount = osKernelGetTickCount();
 
         // Read throttle

@@ -16,9 +16,10 @@
 
 #include "ext_drivers/stm32f767.h"
 #include "ext_drivers/poten.h"
-#include <ext_drivers/pressure_sensor.h>
+#include "ext_drivers/pressure_sensor.h"
 #include "ext_drivers/canbus.h"
 #include "ext_drivers/cli.h"
+#include "ext_drivers/mpu6050.h"
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
@@ -49,6 +50,7 @@ typedef struct {
 	poten_t apps2;
  	canbus_device_t canbus_device;
 	cli_device_t cli;
+	mpu6050_device_t mpu6050;
 } board_t;
 
 void board_init(board_t *dev);

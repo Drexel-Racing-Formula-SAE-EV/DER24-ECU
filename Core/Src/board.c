@@ -24,6 +24,16 @@ void board_init(board_t *dev)
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 
 	cli_device_init(&dev->cli, &dev->stm32f767.huart3);
+
+	mpu6050_config_t mpu6050_conf = {0};
+	mpu6050_conf.addr_7bit = MPU6050_ADDR0;
+	mpu6050_conf.sample_rate_divisor = 0;
+	mpu6050_conf.external_sync = EXT_SYNC_DISABLE;
+	mpu6050_conf.lowpass_filter = DLPF_260HZ_BW;
+	mpu6050_conf.gyro_scale = FS_SEL_250;
+	mpu6050_conf.acc_scale = AFS_SEL_2;
+	mpu6050_conf.clock = CLKSEL_INT_8MHZ;
+	mpu6050_init(&dev->mpu6050, &mpu6050_conf, &dev->stm32f767.hi2c2);
 }
 
 // TODO: Change this
