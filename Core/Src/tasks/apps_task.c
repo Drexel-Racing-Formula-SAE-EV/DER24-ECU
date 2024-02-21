@@ -55,7 +55,7 @@ void apps_task_fn(void *arg)
         apps1->count = apps1->read_count(apps1->handle);
         apps2->count = apps2->read_count(apps2->handle);
         apps1->percent = poten_get_percent(apps1);
-        apps1->percent = poten_get_percent(apps2);
+        apps2->percent = poten_get_percent(apps2);
 
         // T.4.2.5 (2022)
         if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10))
