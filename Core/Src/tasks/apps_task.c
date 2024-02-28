@@ -52,8 +52,8 @@ void apps_task_fn(void *arg)
         entryTicksCount = osKernelGetTickCount();
 
         // Read throttle
-        apps1->count = apps1->read_count(apps1->handle);
-        apps2->count = apps2->read_count(apps2->handle);
+        apps1->count = stm32f767_adc_read(apps1->handle);
+        apps2->count = stm32f767_adc_read(apps2->handle);
         apps1->percent = poten_get_percent(apps1);
         apps2->percent = poten_get_percent(apps2);
 

@@ -23,18 +23,14 @@ typedef struct {
 	uint16_t count;
 	float percent;
 
-	void *handle;
-	uint32_t channelNum;
-
-	uint16_t(*read_count)(void *hadc);
+	ADC_HandleTypeDef *handle;
+	uint32_t channel;
 } pressure_sensor_t;
 
-void pressure_sensor_init(pressure_sensor_t *sensor, uint16_t min, uint16_t max, void *handle, uint8_t channelNum, uint16_t(*read_count)(void *hadc));
+void pressure_sensor_init(pressure_sensor_t *sensor, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle, uint8_t channel);
 
 float pressure_sensor_get_percent(pressure_sensor_t *root);
 
 uint8_t pressure_sensor_check_implausibility(float L, float R, int thresh, int count);
-
-uint8_t switchChannelADC(pressure_sensor_t *root);
 
 #endif

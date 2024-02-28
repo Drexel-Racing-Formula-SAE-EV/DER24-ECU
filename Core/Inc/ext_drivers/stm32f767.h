@@ -12,6 +12,7 @@
 #ifndef __STM32F767_H_
 #define __STM32F767_H_
 
+#include <stdint.h>
 #include "stm32f7xx_hal.h"
 #include "cmsis_os.h"
 
@@ -44,5 +45,7 @@ typedef struct {
 } stm32f767_device_t;
 
 void stm32f767_init(stm32f767_device_t *dev);
+uint16_t stm32f767_adc_read(ADC_HandleTypeDef *hadc);
+HAL_StatusTypeDef stm32f767_adc_switch_channel(ADC_HandleTypeDef *hadc, uint32_t channel);
 
 #endif

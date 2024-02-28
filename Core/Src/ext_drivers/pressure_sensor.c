@@ -12,15 +12,15 @@
 #include <math.h>
 
 #include "ext_drivers/pressure_sensor.h"
+
 #include "ext_drivers/map.h"
 
-void pressure_sensor_init(pressure_sensor_t *sensor, uint16_t min, uint16_t max, void *handle, uint8_t channelNum, uint16_t(*read_count)(void *arg))
+void pressure_sensor_init(pressure_sensor_t *sensor, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle, uint8_t channel)
 {
 	sensor->min = min;
 	sensor->max = max;
 	sensor->handle = handle;
-	sensor->channelNum = channelNum;
-	sensor->read_count = read_count;
+	sensor->channel = channel;
 }
 
 float pressure_sensor_get_percent(pressure_sensor_t *root)
@@ -58,20 +58,3 @@ uint8_t pressure_sensor_check_implausibility(float L, float R, int thresh, int c
 		return 1;
 	}
 }
-
-
-
-uint8_t switchChannelADC (pressure_sensor_t *root)
-{
-	//TODO: add code here from the prefeature APPS branch
-	ADC_ChannelConfTypeDef sConfig = {0};
-	/** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-	*/
-	sConfig.Channel = root->channelNum;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-	if (HAL_ADC_ConfigChannel(root->handle, &sConfig) != HAL_OK) return 1;
-	else return 1;
-}
-
-

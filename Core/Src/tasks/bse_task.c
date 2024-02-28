@@ -40,10 +40,10 @@ void bse_task_fn(void *arg)
 		entryTicksCount = osKernelGetTickCount();
 
 		// Read ADC channels for each BSE input
-		switchChannelADC(bse1);
-		bse1->count = bse1->read_count(bse1->handle);
-		switchChannelADC(bse2);
-		bse2->count = bse2->read_count(bse2->handle);
+		stm32f767_adc_switch_channel(bse1->handle, bse1->channel);
+		bse1->count = stm32f767_adc_read(bse1->handle);
+		stm32f767_adc_switch_channel(bse2->handle, bse2->channel);
+		bse2->count = stm32f767_adc_read(bse2->handle);
 
 		// Calculate Percentage
 		bse1->percent = pressure_sensor_get_percent(bse1);

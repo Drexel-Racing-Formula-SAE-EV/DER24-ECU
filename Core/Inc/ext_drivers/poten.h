@@ -13,6 +13,7 @@
 #define __POTEN_H_
 
 #include <stdint.h>
+#include "stm32f7xx_hal.h"
 
 typedef struct {
 	uint16_t min;
@@ -21,12 +22,10 @@ typedef struct {
 	uint16_t count;
 	float percent;
 
-	void *handle;
-
-	uint16_t(*read_count)(void *hadc);
+	ADC_HandleTypeDef *handle;
 } poten_t;
 
-void poten_init(poten_t *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *hadc));
+void poten_init(poten_t *poten, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle);
 
 float poten_get_percent(poten_t *root);
 

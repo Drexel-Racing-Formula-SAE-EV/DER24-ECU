@@ -14,12 +14,11 @@
 #include "ext_drivers/poten.h"
 #include "ext_drivers/map.h"
 
-void poten_init(poten_t *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg))
+void poten_init(poten_t *poten, uint16_t min, uint16_t max, ADC_HandleTypeDef *handle)
 {
 	poten->min = min;
 	poten->max = max;
 	poten->handle = handle;
-	poten->read_count = read_count;
 }
 
 float poten_get_percent(poten_t *root) {
