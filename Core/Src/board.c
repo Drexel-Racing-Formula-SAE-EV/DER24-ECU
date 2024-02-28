@@ -36,19 +36,6 @@ void board_init(board_t *dev)
 	mpu6050_init(&dev->mpu6050, &mpu6050_conf, &dev->stm32f767.hi2c2);
 }
 
-// TODO: Change this
-uint16_t ADC_read_count(void *hadc)
-{
-	uint16_t count;
-
-	HAL_ADC_Start(hadc);
-	HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
-	count = HAL_ADC_GetValue(hadc);
-	HAL_ADC_Stop(hadc);
-
-	return count;
-}
-
 void setBrakeLight(bool state)
 {
 	HAL_GPIO_WritePin(Brake_Light_GPIO_Port, Brake_Light_Pin, state);
