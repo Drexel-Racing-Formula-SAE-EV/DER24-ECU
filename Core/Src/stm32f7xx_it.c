@@ -172,11 +172,13 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 0 */
 	extern app_data_t app;
 
-	UART_HandleTypeDef huart3 = *app.board.cli.huart;
+	UART_HandleTypeDef *huart3 = app.board.cli.huart;
+#if 0
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-
+#endif
+  HAL_UART_IRQHandler(huart3);
   /* USER CODE END USART3_IRQn 1 */
 }
 
@@ -202,11 +204,13 @@ void UART7_IRQHandler(void)
   /* USER CODE BEGIN UART7_IRQn 0 */
 	extern app_data_t app;
 
-	UART_HandleTypeDef huart7 = *app.board.cli.huart;
+	UART_HandleTypeDef *huart7 = &app.board.stm32f767.huart7;
+#if 0
   /* USER CODE END UART7_IRQn 0 */
   HAL_UART_IRQHandler(&huart7);
   /* USER CODE BEGIN UART7_IRQn 1 */
-
+#endif
+  HAL_UART_IRQHandler(huart7);
   /* USER CODE END UART7_IRQn 1 */
 }
 
@@ -220,7 +224,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	cli_device_t *cli = &app.board.cli;
 
 	if(cli->huart->Instance == huart->Instance){
-		if(cli->c == '\n' || cli->c == '\r'){
+		if(cli->c == '\r'){
 			ret = HAL_UART_Transmit_IT(cli->huart, endl, strlen(endl));
 			cli->line[cli->index] = '\0';
 			cli->index = 0;
@@ -228,13 +232,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 			if(strlen(cli->line) > 0){
 				cli->msg_pending = true;
 				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
-				portYIELD_FROM_ISR(awoken);
 			}
+		}else if(cli->c == '\n'){
+			// ignore \r
 		}else if(cli->c == 127){
 			uint8_t del = 127;
 			cli->index--;
 			cli->line[cli->index] = ' ';
-			ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
+			ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
 			ret = HAL_UART_Transmit_IT(cli->huart, &cli->line[cli->index], 1);
 			ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
 		}else if(cli->c >= 32 && cli->c <= 126){
@@ -243,7 +248,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		}
 
 		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
-		//if(ret == HAL_BUSY) HAL_UART_AbortReceive_IT(cli->huart);
 	}
 }
 /* USER CODE END 1 */
