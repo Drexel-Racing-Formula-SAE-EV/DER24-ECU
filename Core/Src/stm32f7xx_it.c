@@ -214,34 +214,36 @@ void UART7_IRQHandler(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern app_data_t app;
 	uint8_t endl[] = "\r\n";
+	HAL_StatusTypeDef ret = 0;
+	BaseType_t awoken = pdFALSE;
 
 	cli_device_t *cli = &app.board.cli;
 
-	if(cli->huart == huart){
-		if(cli->c == '\n'){
-			HAL_UART_Transmit_IT(huart, endl, strlen(endl));
+	if(cli->huart->Instance == huart->Instance){
+		if(cli->c == '\n' || cli->c == '\r'){
+			ret = HAL_UART_Transmit_IT(cli->huart, endl, strlen(endl));
 			cli->line[cli->index] = '\0';
 			cli->index = 0;
 			// handle cmd
 			if(strlen(cli->line) > 0){
 				cli->msg_pending = true;
-				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, NULL);
+				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
+				portYIELD_FROM_ISR(awoken);
 			}
-		}else if(cli->c == '\r'){
-			// ignore return carriage
 		}else if(cli->c == 127){
 			uint8_t del = 127;
 			cli->index--;
 			cli->line[cli->index] = ' ';
-			HAL_UART_Transmit_IT(huart, &del, 1);
-			HAL_UART_Transmit_IT(huart, &cli->line[cli->index], 1);
-			HAL_UART_Transmit_IT(huart, &del, 1);
+			ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
+			ret = HAL_UART_Transmit_IT(cli->huart, &cli->line[cli->index], 1);
+			ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
 		}else if(cli->c >= 32 && cli->c <= 126){
 			cli->line[cli->index++] = cli->c;
-			HAL_UART_Transmit_IT(huart, &cli->c, 1);
+			ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
 		}
 
-		HAL_UART_Receive_IT(huart, &cli->c, 1);
+		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
+		//if(ret == HAL_BUSY) HAL_UART_AbortReceive_IT(cli->huart);
 	}
 }
 /* USER CODE END 1 */

@@ -50,7 +50,7 @@ TaskHandle_t cli_task_start(app_data_t *data)
 
 void cli_task_fn(void *arg)
 {
-    data = (app_data_t *)arg;
+    app_data_t *data = (app_data_t *)arg;
 	cli_device_t *cli = &data->board.cli;
     uint32_t taskNotification;
 	int num_cmds;

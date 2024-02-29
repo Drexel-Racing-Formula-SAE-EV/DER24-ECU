@@ -50,7 +50,7 @@ void app_create()
 	assert(app.bse_task = bse_task_start(&app));
 	assert(app.apps_task = apps_task_start(&app));
 	assert(app.bppc_task = bppc_task_start(&app));
-	assert(app.acc_task = acc_task_start(&app));
+	//assert(app.acc_task = acc_task_start(&app));
 }
 
 void cli_putline(char *line)
