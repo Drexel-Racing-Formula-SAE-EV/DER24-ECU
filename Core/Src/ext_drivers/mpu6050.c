@@ -26,8 +26,10 @@ int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDe
 	dev->gyro_div = GRYO_DIVS[conf->gyro_scale];
 	dev->acc_div = ACC_DIVS[conf->acc_scale];
 
+	ret |= HAL_I2C_IsDeviceReady(dev->hi2c, (dev->addr_7bit << 1), 10, 10);
+
 	temp_data = conf->sample_rate_divisor;
-	ret |= HAL_I2C_Mem_Write(dev->hi2c, (dev->addr_7bit << 1), REG_SMPLRT_DIV, 1, &temp_data, 1, 200);
+	ret |= HAL_I2C_Mem_Write(dev->hi2c, (dev->addr_7bit << 1), REG_SMPLRT_DIV, I2C_MEMADD_SIZE_8BIT, &temp_data, 1, 200);
 
 	temp_data = conf->lowpass_filter;
 	temp_data |= conf->external_sync << 3;
