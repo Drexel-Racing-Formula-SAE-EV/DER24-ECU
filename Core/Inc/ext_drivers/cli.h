@@ -17,14 +17,17 @@
 
 #include "stm32f7xx_hal.h"
 
-#define CLI_LINE_SIZE 32
+#define CLI_LINE_SIZE 128
 
 typedef struct {
-    char line[CLI_LINE_SIZE];
     uint8_t c;
     unsigned int index;
 	UART_HandleTypeDef *huart;
     bool msg_pending;
+    unsigned int msg_count;
+    unsigned int msg_proc;
+    unsigned int msg_valid;
+    char line[CLI_LINE_SIZE];
 } cli_device_t;
 
 typedef struct {

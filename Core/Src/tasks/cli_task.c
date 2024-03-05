@@ -20,6 +20,7 @@
 * @param arg App_data struct pointer converted to void pointer
 */
 void cli_task_fn(void *arg);
+void cli_handle_cmd(char *cmd);
 
 void cmd_not_found(char *cmd);
 void help(char *arg);
@@ -44,20 +45,17 @@ command_t cmds[] =
 TaskHandle_t cli_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 10, &handle);
+   xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 14, &handle);
    return handle;
 }
 
 void cli_task_fn(void *arg)
 {
-    app_data_t *data = (app_data_t *)arg;
+    data = (app_data_t *)arg;
 	cli_device_t *cli = &data->board.cli;
     uint32_t taskNotification;
-	int num_cmds;
-	int i;
+    char buf[CLI_LINE_SIZE] = {0};
 	
-	num_cmds = sizeof(cmds) / sizeof(command_t);
-
 	cli_putline("DREV ECU Firmware Version 0.1");
 	cli_putline("Type 'help' for help");
 
@@ -66,22 +64,35 @@ void cli_task_fn(void *arg)
 		xTaskNotifyWait(0, 0, &taskNotification, HAL_MAX_DELAY);
 		if(cli->msg_pending == true)
 		{
-			for(i = 0; i < num_cmds + 1; i++)
-			{
-				if(i == num_cmds)
-				{
-					cmd_not_found(cli->line);
-					break;
-				}
-				if(!strncmp(cmds[i].name, cli->line, strlen(cmds[i].name)))
-				{
-					cmds[i].func(cli->line);
-					break;
-				}
-			}
+			taskENTER_CRITICAL();
+			memcpy(buf, cli->line, strlen(cli->line) + 1);
+			memset(cli->line, 0, strlen(cli->line) + 1);
+			taskEXIT_CRITICAL();
+			cli_handle_cmd(buf);
 			cli->msg_pending = false;
+			cli->msg_proc++;
 		}
 	}
+}
+
+void cli_handle_cmd(char *cmd)
+{
+	cli_device_t *cli = &data->board.cli;
+	int i;
+	bool cmd_found = false;
+	int num_cmds = sizeof(cmds) / sizeof(command_t);
+
+	for(i = 0; i < num_cmds; i++)
+	{
+		if(!strncmp(cmds[i].name, cmd, CLI_LINE_SIZE))
+		{
+			cmds[i].func(cmd);
+			cli->msg_valid++;
+			cmd_found = true;
+			break;
+		}
+	}
+	if(!cmd_found) cmd_not_found(cmd);
 }
 
 void cmd_not_found(char *cmd)
@@ -112,7 +123,7 @@ void help(char *arg)
 
 void get_throttle(char *arg)
 {
-	float x = data->throttlePercent;
+	double x = data->throttlePercent;
 	snprintf(line, 256, "throttle: %6.2f%%", x);
 	cli_putline(line);
 }
@@ -125,7 +136,7 @@ void get_brakelight(char *arg)
 
 void get_brake(char *arg)
 {
-	float x = data->brakePercent;
+	double x = data->brakePercent;
 	snprintf(line, 256, "brake: %6.2f%%", x);
 	cli_putline(line);
 }

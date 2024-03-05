@@ -217,37 +217,53 @@ void UART7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern app_data_t app;
-	uint8_t endl[] = "\r\n";
+	char endl[] = "\r\n";
 	HAL_StatusTypeDef ret = 0;
 	BaseType_t awoken = pdFALSE;
 
 	cli_device_t *cli = &app.board.cli;
 
-	if(cli->huart->Instance == huart->Instance){
-		if(cli->c == '\r'){
-			ret = HAL_UART_Transmit_IT(cli->huart, endl, strlen(endl));
+	if(cli->huart->Instance == huart->Instance)
+	{
+		if(cli->c == '\r')
+		{
+			ret = HAL_UART_Transmit_IT(cli->huart, (uint8_t *)endl, strlen(endl));
 			cli->line[cli->index] = '\0';
 			cli->index = 0;
-			// handle cmd
-			if(strlen(cli->line) > 0){
+			if(strlen(cli->line) > 0)
+			{
 				cli->msg_pending = true;
+				cli->msg_count++;
 				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
 			}
-		}else if(cli->c == '\n'){
-			// ignore \r
-		}else if(cli->c == 127){
-			uint8_t del = 127;
-			cli->index--;
-			cli->line[cli->index] = ' ';
-			ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
-			ret = HAL_UART_Transmit_IT(cli->huart, &cli->line[cli->index], 1);
-			ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
-		}else if(cli->c >= 32 && cli->c <= 126){
-			cli->line[cli->index++] = cli->c;
-			ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
 		}
-
+		else if(cli->c == '\n')
+		{
+			// ignore \r
+		}
+		else if(cli->c == 127)
+		{
+			uint8_t del = 127;
+			if(cli->index != 0)
+			{
+				cli->index--;
+				cli->line[cli->index] = ' ';
+				ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
+				ret = HAL_UART_Transmit_IT(cli->huart, (uint8_t *)&cli->line[cli->index], 1);
+				ret = HAL_UART_Transmit_IT(cli->huart, &del, 1);
+			}
+		}
+		else if(cli->c >= 32 && cli->c <= 126)
+		{
+			if(cli->index != CLI_LINE_SIZE - 1)
+			{
+				cli->line[cli->index++] = cli->c;
+				ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
+			}
+		}
 		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
+		if(ret != HAL_OK) app.cliFaultFlag = true;
+		else app.cliFaultFlag = false;
 	}
 }
 /* USER CODE END 1 */

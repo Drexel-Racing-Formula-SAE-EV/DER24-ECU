@@ -46,6 +46,7 @@ typedef struct {
 	bool bseFaultFlag;
 	bool bppcFaultFlag;
 	bool accFaultFlag;
+	bool cliFaultFlag;
 	
 	bool brakeLightState;
 

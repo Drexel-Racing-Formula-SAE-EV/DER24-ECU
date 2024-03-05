@@ -31,35 +31,35 @@ extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart3;
 
 const osMutexAttr_t can1_mutex_attr = {
-	.name = "CAN Bus 1 Mutex",
+	.name = "CAN Bus Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
 };
 
 const osMutexAttr_t i2c2_mutex_attr = {
-	.name = "I2C 2 Mutex",
+	.name = "MPU6050 Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
 };
 
 const osMutexAttr_t spi6_mutex_attr = {
-	.name = "SPI 6 Mutex",
+	.name = "SD Card Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
 };
 
 const osMutexAttr_t uart3_mutex_attr = {
-	.name = "UART 3 Mutex",
+	.name = "CLI Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
 };
 
 const osMutexAttr_t uart7_mutex_attr = {
-	.name = "UART 7 Mutex",
+	.name = "Dashboard Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
