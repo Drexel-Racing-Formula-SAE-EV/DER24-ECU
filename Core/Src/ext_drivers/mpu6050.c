@@ -26,7 +26,7 @@ int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDe
 	dev->gyro_div = GRYO_DIVS[conf->gyro_scale];
 	dev->acc_div = ACC_DIVS[conf->acc_scale];
 
-	ret |= HAL_I2C_IsDeviceReady(dev->hi2c, (dev->addr_7bit << 1), 10, 10);
+	ret |= HAL_I2C_IsDeviceReady(dev->hi2c, (dev->addr_7bit << 1), 100, 100);
 
 	temp_data = conf->sample_rate_divisor;
 	ret |= HAL_I2C_Mem_Write(dev->hi2c, (dev->addr_7bit << 1), REG_SMPLRT_DIV, I2C_MEMADD_SIZE_8BIT, &temp_data, 1, 200);
@@ -52,22 +52,21 @@ int mpu6050_read(mpu6050_device_t *dev){
 	uint8_t data[14];
 
 	ret = HAL_I2C_Mem_Read(dev->hi2c, (dev->addr_7bit << 1), ACCEL_XOUT_H, 1, data, 14, 200);
-
+	if(ret != HAL_OK) dev->error = ret;
     int x_accR = ((int)data[0] << 8) | data[1];
     int y_accR = ((int)data[2] << 8) | data[3];
     int z_accR = ((int)data[4] << 8) | data[5];
-    //float temp = ((float)(((uint16_t)data[6] << 8) | data[7]) / 340.0) + 36.53;
+    int tempR  = ((int)data[6] << 8) | data[7];
     int x_gyroR = ((int)data[8] << 8) | data[9];
     int y_gyroR = ((int)data[10] << 8) | data[11];
     int z_gyroR = ((int)data[12] << 8) | data[13];
-
     dev->x_acc = (float)x_accR/ dev->acc_div;
     dev->y_acc = (float)y_accR / dev->acc_div;
     dev->z_acc = (float)z_accR / dev->acc_div;
-
     dev->x_gyro = (float)x_gyroR / dev->gyro_div;
     dev->x_gyro = (float)y_gyroR / dev->gyro_div;
     dev->x_gyro = (float)z_gyroR / dev->gyro_div;
+    dev->temp = ((float)(tempR) / 340.0) + 36.53;
 
     return ret;
 }

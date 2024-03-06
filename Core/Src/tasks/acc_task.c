@@ -30,8 +30,7 @@ void acc_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
     mpu6050_device_t *mpu6050 = &data->board.mpu6050;
-
-    int ret;
+    int ret = 0;
     uint32_t entryTicksCount;
 
     for(;;)
