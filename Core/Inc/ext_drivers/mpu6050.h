@@ -96,6 +96,7 @@ typedef struct
 	float z_gyro;
 	float acc_div;
 	float gyro_div;
+	HAL_StatusTypeDef error;
 } mpu6050_device_t;
 
 int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDef *hi2c);

@@ -26,7 +26,7 @@ void board_init(board_t *dev)
 	cli_device_init(&dev->cli, &dev->stm32f767.huart3);
 
 	mpu6050_config_t mpu6050_conf = {0};
-	mpu6050_conf.addr_7bit = MPU6050_ADDR0;
+	mpu6050_conf.addr_7bit = MPU6050_ADDR1;
 	mpu6050_conf.sample_rate_divisor = 0;
 	mpu6050_conf.external_sync = EXT_SYNC_DISABLE;
 	mpu6050_conf.lowpass_filter = DLPF_260HZ_BW;
