@@ -49,7 +49,7 @@ int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDe
 
 int mpu6050_read(mpu6050_device_t *dev){
 	HAL_StatusTypeDef ret;
-	uint8_t data[14];
+	uint8_t data[14] = {0};
 
 	ret = HAL_I2C_Mem_Read(dev->hi2c, (dev->addr_7bit << 1), ACCEL_XOUT_H, 1, data, 14, 200);
 	dev->error = ret;
