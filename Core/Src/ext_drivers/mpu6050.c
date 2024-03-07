@@ -52,7 +52,7 @@ int mpu6050_read(mpu6050_device_t *dev){
 	uint8_t data[14];
 
 	ret = HAL_I2C_Mem_Read(dev->hi2c, (dev->addr_7bit << 1), ACCEL_XOUT_H, 1, data, 14, 200);
-	if(ret != HAL_OK) dev->error = ret;
+	dev->error = ret;
     int x_accR = ((int)data[0] << 8) | data[1];
     int y_accR = ((int)data[2] << 8) | data[3];
     int z_accR = ((int)data[4] << 8) | data[5];

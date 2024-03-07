@@ -33,7 +33,7 @@ void board_init(board_t *dev)
 	mpu6050_conf.gyro_scale = FS_SEL_250;
 	mpu6050_conf.acc_scale = AFS_SEL_2;
 	mpu6050_conf.clock = CLKSEL_INT_8MHZ;
-	//mpu6050_init(&dev->mpu6050, &mpu6050_conf, &dev->stm32f767.hi2c2);
+	mpu6050_init(&dev->mpu6050, &mpu6050_conf, &dev->stm32f767.hi2c2);
 }
 
 void setBrakeLight(bool state)
