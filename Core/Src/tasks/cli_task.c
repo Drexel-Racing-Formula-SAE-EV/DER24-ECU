@@ -20,16 +20,16 @@
 * @param arg App_data struct pointer converted to void pointer
 */
 void cli_task_fn(void *arg);
-void cli_handle_cmd(char *cmd);
+void cli_handle_cmd(int argc, char *argv[]);
+void cmd_not_found(int argc, char *argv[]);
 
-void cmd_not_found(char *cmd);
-void help(char *arg);
-void get_throttle(char *arg);
-void get_brakelight(char *arg);
-void get_brake(char *arg);
-void get_time(char *arg);
-void set_time(char *arg);
-void get_faults(char *arg);
+int help(int argc, char *argv[]);
+int get_throttle(int argc, char *argv[]);
+int get_brakelight(int argc, char *argv[]);
+int get_brake(int argc, char *argv[]);
+int get_time(int argc, char *argv[]);
+int set_time(int argc, char *argv[]);
+int get_faults(int argc, char *argv[]);
 
 char line[256];
 app_data_t *data;
@@ -47,7 +47,7 @@ command_t cmds[] =
 TaskHandle_t cli_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 14, &handle);
+   xTaskCreate(cli_task_fn, "CLI task", 256, (void *)data, 14, &handle);
    return handle;
 }
 
@@ -57,6 +57,8 @@ void cli_task_fn(void *arg)
 	cli_device_t *cli = &data->board.cli;
     uint32_t taskNotification;
     char buf[CLI_LINE_SIZE] = {0};
+    char *tokens[MAXTOKS];
+    int n;
 	
 	cli_putline("DREV ECU Firmware Version 0.1");
 	cli_putline("Type 'help' for help");
@@ -64,21 +66,21 @@ void cli_task_fn(void *arg)
 	for(;;)
 	{
 		xTaskNotifyWait(0, 0, &taskNotification, HAL_MAX_DELAY);
-		// TODO: Tokenize :(
 		if(cli->msg_pending == true)
 		{
 			taskENTER_CRITICAL();
 			memcpy(buf, cli->line, strlen(cli->line) + 1);
 			memset(cli->line, 0, strlen(cli->line) + 1);
+			n = tokenize(buf, tokens, MAXTOKS, " \t");
 			taskEXIT_CRITICAL();
-			cli_handle_cmd(buf);
+			cli_handle_cmd(n, tokens);
 			cli->msg_pending = false;
 			cli->msg_proc++;
 		}
 	}
 }
 
-void cli_handle_cmd(char *cmd)
+void cli_handle_cmd(int argc, char *argv[])
 {
 	cli_device_t *cli = &data->board.cli;
 	int i;
@@ -87,30 +89,24 @@ void cli_handle_cmd(char *cmd)
 
 	for(i = 0; i < num_cmds; i++)
 	{
-		if(!strncmp(cmds[i].name, cmd, CLI_LINE_SIZE))
+		if(!strncmp(cmds[i].name, argv[0], CLI_LINE_SIZE))
 		{
-			cmds[i].func(cmd);
+			data->board.cli.ret = cmds[i].func(argc, argv);
 			cli->msg_valid++;
 			cmd_found = true;
 			break;
 		}
 	}
-	if(!cmd_found) cmd_not_found(cmd);
+	if(!cmd_found) cmd_not_found(argc, argv);
 }
 
-void cmd_not_found(char *cmd)
+void cmd_not_found(int argc, char *argv[])
 {
-	snprintf(line, 256, "Command not found: \'%s\'", cmd);
+	snprintf(line, 256, "Command not found: \'%s\'", argv[0]);
 	cli_putline(line);
-	/*
-	for(int i = 0; i < strlen(cmd); i++){
-		snprintf(line, 256, "[%c(%d)]", cmd[i], cmd[i]);
-		cli_putline(line);
-	}
-	*/
 }
 
-void help(char *arg)
+int help(int argc, char *argv[])
 {
 	int num_cmds;
 	int i;
@@ -122,29 +118,33 @@ void help(char *arg)
 		snprintf(line, 256, "%s - %s", cmds[i].name, cmds[i].desc);
 		cli_putline(line);
 	}
+	return 0;
 }
 
-void get_throttle(char *arg)
+int get_throttle(int argc, char *argv[])
 {
 	double x = data->throttlePercent;
 	snprintf(line, 256, "throttle: %6.2f%%", x);
 	cli_putline(line);
+	return 0;
 }
 
-void get_brakelight(char *arg)
+int get_brakelight(int argc, char *argv[])
 {
 	snprintf(line, 256, "brakelight: %s", data->brakeLightState ? "ON" : "OFF");
 	cli_putline(line);
+	return 0;
 }
 
-void get_brake(char *arg)
+int get_brake(int argc, char *argv[])
 {
 	double x = data->brakePercent;
 	snprintf(line, 256, "brake: %6.2f%%", x);
 	cli_putline(line);
+	return 0;
 }
 
-void get_time(char *arg)
+int get_time(int argc, char *argv[])
 {
 	read_time();
 	snprintf(line, 256, "RTC: %02d/%02d/%d-%02d:%02d:%02d",
@@ -155,12 +155,20 @@ void get_time(char *arg)
 			data->datetime.minute,
 			data->datetime.second);
 	cli_putline(line);
+	return 0;
 }
 
-void set_time(char *arg)
+int set_time(int argc, char *argv[])
 {
 	int month, day, year, hour, minute, second;
-	int ret = sscanf(arg + 6, "%d/%d/%d-%d:%d:%d",
+
+	if(argc != 2)
+	{
+		cli_putline("ERROR: stime takes 1 argument");
+		cli_putline("usage: 'stime 1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM");
+		return 1;
+	}
+	int ret = sscanf(argv[1], "%d/%d/%d-%d:%d:%d",
 			&month,
 			&day,
 			&year,
@@ -168,34 +176,33 @@ void set_time(char *arg)
 			&minute,
 			&second);
 
+	if(ret != 6){
+		cli_putline("ERROR: set time format not readable");
+		cli_putline("usage: 'stime 1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM");
+		return 1;
+	}
+
 	data->datetime.month = month;
 	data->datetime.day = day;
 	data->datetime.year = year;
 	data->datetime.hour = hour;
 	data->datetime.minute = minute;
 	data->datetime.second = second;
+	write_time();
 
-	cli_putline(arg + 7);
-
-	if(ret != 6){
-		cli_putline("ERROR: set time format not readable");
-		cli_putline("format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM");
-	}else{
-		write_time();
-
-		snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
-				data->datetime.month,
-				data->datetime.day,
-				data->datetime.year,
-				data->datetime.hour,
-				data->datetime.minute,
-				data->datetime.second
-				);
-		cli_putline(line);
-	}
+	snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
+			data->datetime.month,
+			data->datetime.day,
+			data->datetime.year,
+			data->datetime.hour,
+			data->datetime.minute,
+			data->datetime.second
+			);
+	cli_putline(line);
+	return 0;
 }
 
-void get_faults(char *arg)
+int get_faults(int argc, char *argv[])
 {
 	cli_putline("System faults:");
 
@@ -219,5 +226,6 @@ void get_faults(char *arg)
 
 	snprintf(line, 256, "cli: %d", data->cliFaultFlag);
 	cli_putline(line);
+	return 0;
 }
 

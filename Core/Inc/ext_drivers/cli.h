@@ -18,6 +18,7 @@
 #include "stm32f7xx_hal.h"
 
 #define CLI_LINE_SIZE 128
+#define MAXTOKS (CLI_LINE_SIZE / 2)
 
 typedef struct {
     uint8_t c;
@@ -28,14 +29,17 @@ typedef struct {
     unsigned int msg_proc;
     unsigned int msg_valid;
     char line[CLI_LINE_SIZE];
+    int ret;
 } cli_device_t;
 
 typedef struct {
     char *name;
-    void (*func)(char *arg);
+    int (*func)(int argc, char *argv[]);
     char *desc;
 } command_t;
 
 void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart);
+int cli_printline(cli_device_t *dev, char *line);
+int tokenize(char *s, char *toks[], int maktoks, char *delim);
 
 #endif

@@ -81,7 +81,6 @@ void cli_putline(char *line)
 		ret |= HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
 		//osMutexRelease(app.board.stm32f767.uart3_mutex);
 	}
-	ret = 0;
 }
 
 
