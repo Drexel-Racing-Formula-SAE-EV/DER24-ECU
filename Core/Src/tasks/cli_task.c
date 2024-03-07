@@ -35,11 +35,11 @@ app_data_t *data;
 command_t cmds[] =
 {
 	{"help", &help, "print help menu"},
-	{"get throttle", &get_throttle, "get the throttle percentage"},
-	{"get brakelight", &get_brakelight, "get the brake light status"},
-	{"get brake", &get_brake, "get the brake percentage"},
-	{"get time", &get_time, "get the current time"},
-	{"get fault", &get_faults, "gets the faults of the system"}
+	{"throttle", &get_throttle, "get the throttle percentage"},
+	{"brakelight", &get_brakelight, "get the brake light status"},
+	{"brake", &get_brake, "get the brake percentage"},
+	{"time", &get_time, "get the current time"},
+	{"fault", &get_faults, "gets the faults of the system"}
 };
 
 TaskHandle_t cli_task_start(app_data_t *data)
