@@ -164,5 +164,11 @@ void get_faults(char *arg)
 
 	snprintf(line, 256, "bppc: %d", data->bppcFaultFlag);
 	cli_putline(line);
+
+	snprintf(line, 256, "acc: %d", data->accFaultFlag);
+	cli_putline(line);
+
+	snprintf(line, 256, "cli: %d", data->cliFaultFlag);
+	cli_putline(line);
 }
 
