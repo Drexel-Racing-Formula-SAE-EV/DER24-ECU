@@ -43,13 +43,15 @@ void app_create()
 
 	board_init(&app.board);
 
+	/*
 	app.datetime.second = 0;
 	app.datetime.minute = 0;
 	app.datetime.hour = 0;
 	app.datetime.day = 1;
 	app.datetime.month = 1;
 	app.datetime.year = 24;
-	//write_time();
+	write_time();
+	*/
 
 	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 
