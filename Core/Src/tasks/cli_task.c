@@ -28,6 +28,7 @@ void get_throttle(char *arg);
 void get_brakelight(char *arg);
 void get_brake(char *arg);
 void get_time(char *arg);
+void set_time(char *arg);
 void get_faults(char *arg);
 
 char line[256];
@@ -38,7 +39,8 @@ command_t cmds[] =
 	{"throttle", &get_throttle, "get the throttle percentage"},
 	{"brakelight", &get_brakelight, "get the brake light status"},
 	{"brake", &get_brake, "get the brake percentage"},
-	{"time", &get_time, "get the current time"},
+	{"gtime", &get_time, "get the RTC"},
+	{"stime", &set_time, "set the RTC. format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM"},
 	{"fault", &get_faults, "gets the faults of the system"}
 };
 
@@ -62,6 +64,7 @@ void cli_task_fn(void *arg)
 	for(;;)
 	{
 		xTaskNotifyWait(0, 0, &taskNotification, HAL_MAX_DELAY);
+		// TODO: Tokenize :(
 		if(cli->msg_pending == true)
 		{
 			taskENTER_CRITICAL();
@@ -143,7 +146,53 @@ void get_brake(char *arg)
 
 void get_time(char *arg)
 {
-	cli_putline("time to get a watch");
+	read_time();
+	snprintf(line, 256, "RTC: %02d/%02d/%d-%02d:%02d:%02d",
+			data->datetime.month,
+			data->datetime.day,
+			data->datetime.year,
+			data->datetime.hour,
+			data->datetime.minute,
+			data->datetime.second);
+	cli_putline(line);
+}
+
+void set_time(char *arg)
+{
+	int month, day, year, hour, minute, second;
+	int ret = sscanf(arg + 6, "%d/%d/%d-%d:%d:%d",
+			&month,
+			&day,
+			&year,
+			&hour,
+			&minute,
+			&second);
+
+	data->datetime.month = month;
+	data->datetime.day = day;
+	data->datetime.year = year;
+	data->datetime.hour = hour;
+	data->datetime.minute = minute;
+	data->datetime.second = second;
+
+	cli_putline(arg + 7);
+
+	if(ret != 6){
+		cli_putline("ERROR: set time format not readable");
+		cli_putline("format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM");
+	}else{
+		write_time();
+
+		snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
+				data->datetime.month,
+				data->datetime.day,
+				data->datetime.year,
+				data->datetime.hour,
+				data->datetime.minute,
+				data->datetime.second
+				);
+		cli_putline(line);
+	}
 }
 
 void get_faults(char *arg)

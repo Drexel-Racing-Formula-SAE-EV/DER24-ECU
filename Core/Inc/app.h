@@ -17,6 +17,7 @@
 
 #include "main.h"
 #include "board.h"
+#include "ext_drivers/rtc.h"
 
 #define PLAUSIBILITY_THRESH 10
 #define BRAKE_LIGHT_THRESH 5
@@ -51,6 +52,7 @@ typedef struct {
 	bool brakeLightState;
 
 	board_t board;
+	datetime_t datetime;
 
 	TaskHandle_t dev_task;
 	TaskHandle_t cli_task;
@@ -64,7 +66,8 @@ typedef struct {
 } app_data_t;
 
 void app_create();
-
 void cli_putline(char *line);
+HAL_StatusTypeDef read_time();
+HAL_StatusTypeDef write_time();
 
 #endif
