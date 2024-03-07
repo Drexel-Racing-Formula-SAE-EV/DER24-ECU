@@ -52,8 +52,8 @@ int tokenize(char *s, char *toks[], int maxtoks, char *delim)
 	toks[i] = (char *)strtok(s, delim);
 	while(toks[i++] != NULL)
 	{
-		if(i >= maxtoks -1) toks[i] = NULL;
+		if(i >= maxtoks - 1) toks[i] = NULL;
 		else toks[i] = (char *)strtok(NULL, delim);
 	}
-	return i;
+	return i - 1;
 }
