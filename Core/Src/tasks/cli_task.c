@@ -72,8 +72,8 @@ void cli_task_fn(void *arg)
 			memcpy(buf, cli->line, strlen(cli->line) + 1);
 			memset(cli->line, 0, strlen(cli->line) + 1);
 			n = tokenize(buf, tokens, MAXTOKS, " \t");
-			taskEXIT_CRITICAL();
 			cli_handle_cmd(n, tokens);
+			taskEXIT_CRITICAL();
 			cli->msg_pending = false;
 			cli->msg_proc++;
 		}

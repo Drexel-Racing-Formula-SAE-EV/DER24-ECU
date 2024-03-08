@@ -57,6 +57,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern CAN_HandleTypeDef hcan1;
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim7;
@@ -165,6 +166,24 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles CAN1 RX0 interrupts.
+  */
+void CAN1_RX0_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+	extern app_data_t app;
+
+	CAN_HandleTypeDef *hcan1 = app.board.canbus_device.hcan;
+#if 0
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+#endif
+  HAL_CAN_IRQHandler(hcan1);
+  /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
   * @brief This function handles USART3 global interrupt.
   */
 void USART3_IRQHandler(void)
@@ -234,7 +253,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 			{
 				cli->msg_pending = true;
 				cli->msg_count++;
-				xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
 			}
 		}
 		else if(cli->c == '\n')
@@ -264,6 +282,28 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
 		if(ret != HAL_OK) app.cliFaultFlag = true;
 		else app.cliFaultFlag = false;
+		xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
 	}
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+	BaseType_t task = 0;
+	extern app_data_t app;
+	canbus_packet_t *rx_packet = &app.board.canbus_device.rx_packet;
+	CAN_RxHeaderTypeDef rx_header;
+
+	// Clear data in rx packet
+	for (uint8_t i = 0; i < 8; i++){
+		rx_packet->data[i] = 0x00;
+	}
+
+	// Read message from CANBus line
+	HAL_CAN_GetRxMessage(app.board.canbus_device.hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
+	// Add the sender ID to the packet
+	rx_packet->id = rx_header.StdId;
+	// Place packet into Canbus message queue. Timeout must = 0 since this is an ISR
+	osMessageQueuePut(app.board.stm32f767.can1_mq, rx_packet, 0, 0);
+	// Notify CANBus task about received message
+	xTaskNotifyFromISR(app.canbus_task, CANBUS_ISR, eSetBits, &task);
 }
 /* USER CODE END 1 */

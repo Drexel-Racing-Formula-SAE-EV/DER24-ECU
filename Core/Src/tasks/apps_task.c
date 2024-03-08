@@ -89,12 +89,12 @@ void apps_task_fn(void *arg)
             TxPacket.data[7] = 0;
         }
 
-        if(data->rtdFlag)
-        {
+        //if(data->rtdFlag)
+        //{
             // Give torque command to CANBus Task
             osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
             xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
-        }
+        //}
 
         osDelayUntil(entryTicksCount + (1000 / APPS_FREQ));
     }
