@@ -64,8 +64,8 @@ int mpu6050_read(mpu6050_device_t *dev){
     dev->y_acc = (float)y_accR / dev->acc_div;
     dev->z_acc = (float)z_accR / dev->acc_div;
     dev->x_gyro = (float)x_gyroR / dev->gyro_div;
-    dev->x_gyro = (float)y_gyroR / dev->gyro_div;
-    dev->x_gyro = (float)z_gyroR / dev->gyro_div;
+    dev->y_gyro = (float)y_gyroR / dev->gyro_div;
+    dev->z_gyro = (float)z_gyroR / dev->gyro_div;
     dev->temp = ((float)(tempR) / 340.0) + 36.53;
 
     return ret;
