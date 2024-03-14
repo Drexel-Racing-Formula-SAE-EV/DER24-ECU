@@ -29,12 +29,16 @@ TaskHandle_t error_task_start(app_data_t *data)
 void error_task_fn(void *arg)
 {
 	app_data_t *data = (app_data_t *)arg;
+	RTC_HandleTypeDef *hrtc = &data->board.stm32f767.hrtc;
 
     uint32_t entryTicksCount;
 
     for(;;)
     {
         entryTicksCount = osKernelGetTickCount();
+
+        //HAL_PWR_EnableBkUpAccess();
+        //HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR1, 0x32);
 
         if(!data->hardSystemFault)
         {

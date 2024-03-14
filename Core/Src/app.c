@@ -119,6 +119,8 @@ HAL_StatusTypeDef write_time(){
 
 	ret |= HAL_RTC_SetTime(&app.board.stm32f767.hrtc, &rTime, RTC_FORMAT_BCD);
 	ret |= HAL_RTC_SetDate(&app.board.stm32f767.hrtc, &rDate, RTC_FORMAT_BCD);
+	HAL_PWR_EnableBkUpAccess();
+	HAL_RTCEx_BKUPWrite(&app.board.stm32f767.hrtc, RTC_BKP_DR0, 0x32);
 
 	return ret;
 }
