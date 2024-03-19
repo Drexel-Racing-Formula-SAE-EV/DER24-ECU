@@ -33,8 +33,8 @@
 
 #define APPS1_MIN 339
 #define APPS1_MAX 1900
-#define APPS2_MIN 810
-#define APPS2_MAX 2158
+#define APPS2_MIN 365
+#define APPS2_MAX 60
 
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
