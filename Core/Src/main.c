@@ -474,14 +474,14 @@ void MX_RTC_Init(void)
 {
 
   /* USER CODE BEGIN RTC_Init 0 */
-#if 0
+
   /* USER CODE END RTC_Init 0 */
 
   RTC_TimeTypeDef sTime = {0};
   RTC_DateTypeDef sDate = {0};
 
   /* USER CODE BEGIN RTC_Init 1 */
-#endif
+
   /* USER CODE END RTC_Init 1 */
 
   /** Initialize RTC Only
@@ -499,7 +499,7 @@ void MX_RTC_Init(void)
   }
 
   /* USER CODE BEGIN Check_RTC_BKUP */
-#if 0
+  if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) == '*') return;
   /* USER CODE END Check_RTC_BKUP */
 
   /** Initialize RTC and set the Time and Date
@@ -523,7 +523,7 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
-#endif
+
   /* USER CODE END RTC_Init 2 */
 
 }

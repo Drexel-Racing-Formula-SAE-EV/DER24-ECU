@@ -189,6 +189,9 @@ int set_time(int argc, char *argv[])
 	data->datetime.minute = minute;
 	data->datetime.second = second;
 	write_time();
+    HAL_PWR_EnableBkUpAccess();
+    HAL_RTCEx_BKUPWrite(&data->board.stm32f767.hrtc, RTC_BKP_DR0, 0x32);
+    HAL_PWR_DisableBkUpAccess();
 
 	snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
 			data->datetime.month,
