@@ -53,7 +53,8 @@ void rtd_task_fn(void *arg)
 			// EV.10.4.3
 			// TODO: check polarity of sensors & decide if MTR inputs here
 			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
-			brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
+			//brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
+			brakesEngaged = 1;
 			rtdButton = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
 			motorOk = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
 

@@ -499,7 +499,15 @@ void MX_RTC_Init(void)
   }
 
   /* USER CODE BEGIN Check_RTC_BKUP */
-  if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) == '*') return;
+  HAL_RTCEx_EnableBypassShadow(&hrtc);
+  HAL_RTC_WaitForSynchro(&hrtc);
+  uint32_t bk = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1);
+  if(bk == 0x32F2)
+  {
+	  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+	  HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+	  return;
+  }
   /* USER CODE END Check_RTC_BKUP */
 
   /** Initialize RTC and set the Time and Date
@@ -508,7 +516,7 @@ void MX_RTC_Init(void)
   sTime.Minutes = 0x0;
   sTime.Seconds = 0x0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  sTime.StoreOperation = RTC_STOREOPERATION_SET;
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
@@ -523,7 +531,9 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
-
+  HAL_PWR_EnableBkUpAccess();
+  HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2);
+  HAL_PWR_DisableBkUpAccess();
   /* USER CODE END RTC_Init 2 */
 
 }

@@ -37,9 +37,9 @@ void error_task_fn(void *arg)
     {
         entryTicksCount = osKernelGetTickCount();
 
-        HAL_PWR_EnableBkUpAccess();
-        HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR0, '*');
-        HAL_PWR_DisableBkUpAccess();
+        //HAL_PWR_EnableBkUpAccess();
+        //HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR0, '*');
+        //HAL_PWR_DisableBkUpAccess();
 
         if(!data->hardSystemFault)
         {
