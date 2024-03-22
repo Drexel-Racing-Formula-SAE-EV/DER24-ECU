@@ -280,8 +280,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 			}
 		}
 		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
-		if(ret != HAL_OK) app.cliFaultFlag = true;
-		else app.cliFaultFlag = false;
+		if(ret != HAL_OK) app.cli_fault = true;
+		else app.cli_fault = false;
 		xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
 	}
 }

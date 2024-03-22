@@ -22,7 +22,7 @@ void poten_init(poten_t *poten, uint16_t min, uint16_t max, ADC_HandleTypeDef *h
 }
 
 float poten_get_percent(poten_t *root) {
-	float percent = (float)map(root->count, root->min, root->max, 100, 0);
+	float percent = (float)map(root->count, root->min, root->max, 0.0, 100.0);
 	if(percent > 100.0) return 100.0;
 	else if(percent < 0.0) return 0.0;
 	else return percent;

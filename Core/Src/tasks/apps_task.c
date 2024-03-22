@@ -9,6 +9,8 @@
  *
  */
 
+#include <math.h>
+
 #include "main.h"
 #include "tasks/apps_task.h"
 #include "ext_drivers/canbus.h"
@@ -37,6 +39,7 @@ void apps_task_fn(void *arg)
     poten_t *apps2 = &data->board.apps2;
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
+    float throttle_raw;
     uint16_t throttleHex;
     canbus_packet_t TxPacket;
     uint32_t entryTicksCount;
@@ -46,12 +49,13 @@ void apps_task_fn(void *arg)
         TxPacket.data[i] = 0x00;
     }
     TxPacket.id = MTR_CMD_ID;
+    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
+    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
     {
         entryTicksCount = osKernelGetTickCount();
 
-        // Read throttle
         apps1->count = stm32f767_adc_read(apps1->handle);
         apps2->count = stm32f767_adc_read(apps2->handle);
         apps1->percent = poten_get_percent(apps1);
@@ -60,12 +64,13 @@ void apps_task_fn(void *arg)
         // T.4.2.5 (2022)
         if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10))
         {
-            data->appsFaultFlag = true;
+            data->apps_fault = true;
         }
 
-        data->throttlePercent = (apps1->percent + apps2->percent) / 2;
+        throttle_raw = (apps1->percent + apps2->percent) / 2;
+        data->throttle = (int)throttle_raw;
 
-        if(data->hardSystemFault || data->softSystemFault)
+        if(data->hard_fault || data->soft_fault)
         {
             TxPacket.data[0] = 0;
             TxPacket.data[1] = 0;
@@ -78,7 +83,7 @@ void apps_task_fn(void *arg)
         }
         else
         {
-            throttleHex = (uint16_t)(data->throttlePercent * MAXTRQ / 10.0); // CM CANBus Protocol
+            throttleHex = (uint16_t)(data->throttle * MAXTRQ / 10.0); // CM CANBus Protocol
             TxPacket.data[0] = TO_LSB(throttleHex);
             TxPacket.data[1] = TO_MSB(throttleHex);
             TxPacket.data[2] = 0;
@@ -91,7 +96,6 @@ void apps_task_fn(void *arg)
 
         //if(data->rtdFlag)
         //{
-            // Give torque command to CANBus Task
             osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
             xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
         //}

@@ -30,48 +30,32 @@ void rtd_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
 
-    canbus_packet_t TxPacket;
-    osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
-	
-	bool tsalHV = false;
-	bool brakesEngaged = false;
-	bool rtdButton = false;
-	bool motorOk = false;
-
-	data->rtdFlag = false;
-
-    for(uint8_t i = 0; i < 8; i++)
-    {
-        TxPacket.data[i] = 0x00;
-    }
-    TxPacket.id = MTR_CMD_ID;
+    uint32_t delay;
 
 	for(;;)
 	{
-		if(!data->rtdFlag)
+		data->tsal = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
+		data->rtd_button = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
+		data->cascadia_ok = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
+		if(!data->rtd_state)
 		{
+			delay = 10;
+
 			// EV.10.4.3
-			// TODO: check polarity of sensors & decide if MTR inputs here
-			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
-			//brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
-			brakesEngaged = 1;
-			rtdButton = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
-			motorOk = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
-
-		    // Send Inverter Disable
-		    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
-		    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
-
-			if(tsalHV && brakesEngaged && rtdButton && motorOk) data->rtdFlag = true;
+			if(data->tsal && data->brakelight && data->rtd_button && data->cascadia_ok)
+			{
+				set_buzzer(1);
+				osDelay(2000);
+				set_buzzer(0);
+				data->rtd_state = true;
+			}
 		}
 		else
 		{
-			data->rtd_task = NULL;
-			setMotorEn(1);
-			vTaskDelete(NULL);
-			while(1) osDelay(1000);
+			if(!(data->tsal && data->rtd_button)) data->rtd_state = false;
+			delay = 100;
 		}
 		
-		osDelay(10);
+		osDelay(delay);
 	}
 }

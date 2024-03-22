@@ -123,7 +123,7 @@ int help(int argc, char *argv[])
 
 int get_throttle(int argc, char *argv[])
 {
-	double x = data->throttlePercent;
+	double x = data->throttle;
 	snprintf(line, 256, "throttle: %6.2f%%", x);
 	cli_putline(line);
 	return 0;
@@ -131,14 +131,14 @@ int get_throttle(int argc, char *argv[])
 
 int get_brakelight(int argc, char *argv[])
 {
-	snprintf(line, 256, "brakelight: %s", data->brakeLightState ? "ON" : "OFF");
+	snprintf(line, 256, "brakelight: %s", data->brakelight ? "ON" : "OFF");
 	cli_putline(line);
 	return 0;
 }
 
 int get_brake(int argc, char *argv[])
 {
-	double x = data->brakePercent;
+	double x = data->brake;
 	snprintf(line, 256, "brake: %6.2f%%", x);
 	cli_putline(line);
 	return 0;
@@ -206,25 +206,25 @@ int get_faults(int argc, char *argv[])
 {
 	cli_putline("System faults:");
 
-	snprintf(line, 256, "hard: %d", data->hardSystemFault);
+	snprintf(line, 256, "hard: %d", data->hard_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "soft: %d", data->softSystemFault);
+	snprintf(line, 256, "soft: %d", data->soft_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "apps: %d", data->appsFaultFlag);
+	snprintf(line, 256, "apps: %d", data->apps_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "bse:  %d", data->bseFaultFlag);
+	snprintf(line, 256, "bse:  %d", data->bse_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "bppc: %d", data->bppcFaultFlag);
+	snprintf(line, 256, "bppc: %d", data->bppc_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "acc: %d", data->accFaultFlag);
+	snprintf(line, 256, "acc: %d", data->acc_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "cli: %d", data->cliFaultFlag);
+	snprintf(line, 256, "cli: %d", data->cli_fault);
 	cli_putline(line);
 	return 0;
 }

@@ -39,21 +39,21 @@ void bppc_task_fn(void *arg)
 	{
 		entryTicksCount = osKernelGetTickCount();
 
-		brakesEnganged = (data->brakePercent > BPPC_BSE_THRESH);
-		throttleEngaged = (data->throttlePercent > BPPC_APPS_H_THRESH);
-		throttleReleased = (data->throttlePercent < BPPC_APPS_L_THRESH);
+		brakesEnganged = (data->brake > BPPC_BSE_THRESH);
+		throttleEngaged = (data->throttle > BPPC_APPS_H_THRESH);
+		throttleReleased = (data->throttle < BPPC_APPS_L_THRESH);
 
 		// EV.5.7 (2022)
-		if(data->bppcFaultFlag == true)
+		if(data->bppc_fault == true)
 		{
 			if(throttleReleased)
 			{
-				data->bppcFaultFlag = false;
+				data->bppc_fault = false;
 			}
 		}
 		else if(brakesEnganged && throttleEngaged)
 		{
-			data->bppcFaultFlag = true;
+			data->bppc_fault = true;
 		}
 
 		osDelayUntil(entryTicksCount + (1000 / BPPC_FREQ));

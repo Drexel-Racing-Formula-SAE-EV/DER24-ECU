@@ -25,33 +25,35 @@ app_data_t app = {0};
 
 void app_create()
 {
-	app.rtdFlag = false;
+	app.throttle = 0;
+	app.brake = 0;
 
-	app.hardSystemFault = false;
-	app.softSystemFault = false;
+	app.rtd_state = false;
 
-	app.appsFaultFlag = false;
-	app.bseFaultFlag = false;
-	app.bppcFaultFlag = false;
-	app.accFaultFlag = false;
-	app.cliFaultFlag = false;
+	app.hard_fault = false;
+	app.soft_fault = false;
 
-	app.brakeLightState = false;
+	app.apps_fault = false;
+	app.bse_fault = false;
+	app.bppc_fault = false;
+	app.acc_fault = false;
+	app.cli_fault = false;
 
-	app.throttlePercent = 0;
-	app.brakePercent = 0;
+	app.tsal = false;
+	app.rtd_button = false;
+	app.cascadia_ok = true;
+	app.cascadia_error = false;
+	app.imd_fail = false;
+	app.bms_fail = false;
+	app.bspd_fail = false;
+
+	app.brakelight = false;
+
+	app.throttle = 0;
+	app.brake = 0;
 
 	board_init(&app.board);
-
-	/*
-	app.datetime.second = 0;
-	app.datetime.minute = 0;
-	app.datetime.hour = 0;
-	app.datetime.day = 1;
-	app.datetime.month = 1;
-	app.datetime.year = 24;
-	write_time();
-	*/
+    set_cascadia_enable(1);
 
 	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 
@@ -63,6 +65,8 @@ void app_create()
 	assert(app.apps_task = apps_task_start(&app));
 	assert(app.bppc_task = bppc_task_start(&app));
 	assert(app.acc_task = acc_task_start(&app));
+
+	set_fw(1);
 }
 
 void cli_putline(char *line)
@@ -124,4 +128,19 @@ HAL_StatusTypeDef write_time(){
     HAL_PWR_DisableBkUpAccess();
 
 	return ret;
+}
+
+void set_fw(bool state)
+{
+	HAL_GPIO_WritePin(Firmware_Ok_GPIO_Port, Firmware_Ok_Pin, state);
+}
+
+void set_buzzer(bool state)
+{
+	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, state);
+}
+
+void set_cascadia_enable(bool state)
+{
+	HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, state);
 }

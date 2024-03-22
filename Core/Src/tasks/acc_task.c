@@ -38,8 +38,8 @@ void acc_task_fn(void *arg)
         entryTicksCount = osKernelGetTickCount();
 
         ret = mpu6050_read(mpu6050);
-        if(ret) data->accFaultFlag = true;
-        else data->accFaultFlag = false;
+        if(ret) data->acc_fault = true;
+        else data->acc_fault = false;
 
         osDelayUntil(entryTicksCount + (1000 / ACC_FREQ));
     }

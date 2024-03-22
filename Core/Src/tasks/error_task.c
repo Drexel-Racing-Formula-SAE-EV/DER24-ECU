@@ -37,28 +37,29 @@ void error_task_fn(void *arg)
     {
         entryTicksCount = osKernelGetTickCount();
 
-        //HAL_PWR_EnableBkUpAccess();
-        //HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR0, '*');
-        //HAL_PWR_DisableBkUpAccess();
+        HAL_PWR_EnableBkUpAccess();
+        HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR0, '*');
+        HAL_PWR_DisableBkUpAccess();
 
-        if(!data->hardSystemFault)
+        data->cascadia_error = HAL_GPIO_ReadPin(MTR_Fault_GPIO_Port, MTR_Fault_Pin);
+		data->imd_fail = HAL_GPIO_ReadPin(IMD_Fail_GPIO_Port, IMD_Fail_Pin);
+		data->bms_fail = HAL_GPIO_ReadPin(BMS_Fail_GPIO_Port, BMS_Fail_Pin);
+		data->bspd_fail = HAL_GPIO_ReadPin(BSPD_Fail_GPIO_Port, BSPD_Fail_Pin);
+        if(!data->hard_fault)
         {
-            if(data->appsFaultFlag || data->bseFaultFlag)
+            if(data->apps_fault || data->bse_fault)
             {
-                data->hardSystemFault = true;
-                setMotorEn(0);
+                data->hard_fault = true;
             }
         }
         
-        if(data->bppcFaultFlag)
+        if(data->bppc_fault)
         {
-            data->softSystemFault = true;
-            setMotorEn(0);
+            data->soft_fault = true;
         }
         else
         {
-            data->softSystemFault = false;
-            setMotorEn(1);
+            data->soft_fault = false;
         }
 
         osDelayUntil(entryTicksCount + (1000 / ERROR_FREQ));

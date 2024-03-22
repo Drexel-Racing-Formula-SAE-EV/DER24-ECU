@@ -48,6 +48,7 @@ void canbus_task_fn(void *arg)
             {
             	tx_header->StdId = can_packet.id;
             	can_status = HAL_CAN_AddTxMessage(hcan, tx_header, can_packet.data, &canbus_device->tx_mailbox);
+            	data->canbus_fault = (can_status != HAL_OK);
             }
             else if(taskNotification & CANBUS_ISR)
             {

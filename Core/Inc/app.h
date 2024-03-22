@@ -35,21 +35,30 @@
 #define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
 typedef struct {
-	float throttlePercent;
-	float brakePercent;
+	int throttle;
+	int brake;
 
-	bool rtdFlag;
+	bool rtd_state;
 
-	bool hardSystemFault;
-	bool softSystemFault;
+	bool hard_fault;
+	bool soft_fault;
 	
-	bool appsFaultFlag;
-	bool bseFaultFlag;
-	bool bppcFaultFlag;
-	bool accFaultFlag;
-	bool cliFaultFlag;
+	bool apps_fault;
+	bool bse_fault;
+	bool bppc_fault;
+	bool acc_fault;
+	bool cli_fault;
+	bool canbus_fault;
 	
-	bool brakeLightState;
+	bool tsal;
+	bool rtd_button;
+	bool cascadia_ok;
+	bool cascadia_error;
+	bool imd_fail;
+	bool bms_fail;
+	bool bspd_fail;
+
+	bool brakelight;
 
 	board_t board;
 	datetime_t datetime;
@@ -69,5 +78,8 @@ void app_create();
 void cli_putline(char *line);
 HAL_StatusTypeDef read_time();
 HAL_StatusTypeDef write_time();
+void set_fw(bool state);
+void set_buzzer(bool state);
+void set_cascadia_enable(bool state);
 
 #endif
