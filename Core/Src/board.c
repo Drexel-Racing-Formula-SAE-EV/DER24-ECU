@@ -35,8 +35,3 @@ void board_init(board_t *dev)
 	mpu6050_conf.clock = CLKSEL_INT_8MHZ;
 	mpu6050_init(&dev->mpu6050, &mpu6050_conf, &dev->stm32f767.hi2c2);
 }
-
-void set_brakelight(bool state)
-{
-	HAL_GPIO_WritePin(Brake_Light_GPIO_Port, Brake_Light_Pin, state);
-}

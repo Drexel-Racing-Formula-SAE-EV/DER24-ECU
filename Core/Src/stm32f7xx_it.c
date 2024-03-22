@@ -236,11 +236,9 @@ void UART7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern app_data_t app;
+	cli_device_t *cli = &app.board.cli;
 	char endl[] = "\r\n";
 	HAL_StatusTypeDef ret = 0;
-	BaseType_t awoken = pdFALSE;
-
-	cli_device_t *cli = &app.board.cli;
 
 	if(cli->huart->Instance == huart->Instance)
 	{
@@ -280,9 +278,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 			}
 		}
 		ret = HAL_UART_Receive_IT(cli->huart, &cli->c, 1);
-		if(ret != HAL_OK) app.cli_fault = true;
-		else app.cli_fault = false;
-		xTaskNotifyFromISR(app.cli_task, 0, eNoAction, &awoken);
+		app.cli_fault = (ret != HAL_OK);
 	}
 }
 

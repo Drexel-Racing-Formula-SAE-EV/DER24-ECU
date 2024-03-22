@@ -55,17 +55,17 @@ void cli_task_fn(void *arg)
 {
     data = (app_data_t *)arg;
 	cli_device_t *cli = &data->board.cli;
-    uint32_t taskNotification;
+    uint32_t entryTicksCount;
     char buf[CLI_LINE_SIZE] = {0};
     char *tokens[MAXTOKS];
     int n;
 	
-	cli_putline("DREV ECU Firmware Version 0.1");
-	cli_putline("Type 'help' for help");
+	cli_putline("~~~~~~~~~~ DER ECU FW V0.1~~~~~~~~~~");
+	cli_putline("Type 'help' for list of commands");
 
 	for(;;)
 	{
-		xTaskNotifyWait(0, 0, &taskNotification, HAL_MAX_DELAY);
+		entryTicksCount = osKernelGetTickCount();
 		if(cli->msg_pending == true)
 		{
 			taskENTER_CRITICAL();
@@ -77,6 +77,7 @@ void cli_task_fn(void *arg)
 			cli->msg_pending = false;
 			cli->msg_proc++;
 		}
+		osDelayUntil(entryTicksCount + (1000 / CLI_FREQ));
 	}
 }
 
@@ -104,6 +105,7 @@ void cmd_not_found(int argc, char *argv[])
 {
 	snprintf(line, 256, "Command not found: \'%s\'", argv[0]);
 	cli_putline(line);
+	cli_putline("Type 'help' for list of commands");
 }
 
 int help(int argc, char *argv[])
@@ -123,8 +125,7 @@ int help(int argc, char *argv[])
 
 int get_throttle(int argc, char *argv[])
 {
-	double x = data->throttle;
-	snprintf(line, 256, "throttle: %6.2f%%", x);
+	snprintf(line, 256, "throttle: %3d%%", data->throttle);
 	cli_putline(line);
 	return 0;
 }
@@ -138,8 +139,7 @@ int get_brakelight(int argc, char *argv[])
 
 int get_brake(int argc, char *argv[])
 {
-	double x = data->brake;
-	snprintf(line, 256, "brake: %6.2f%%", x);
+	snprintf(line, 256, "brake: %3d%%", data->brake);
 	cli_putline(line);
 	return 0;
 }
@@ -206,25 +206,28 @@ int get_faults(int argc, char *argv[])
 {
 	cli_putline("System faults:");
 
-	snprintf(line, 256, "hard: %d", data->hard_fault);
+	snprintf(line, 256, "hard:   %d", data->hard_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "soft: %d", data->soft_fault);
+	snprintf(line, 256, "soft:   %d", data->soft_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "apps: %d", data->apps_fault);
+	snprintf(line, 256, "apps:   %d", data->apps_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "bse:  %d", data->bse_fault);
+	snprintf(line, 256, "bse:    %d", data->bse_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "bppc: %d", data->bppc_fault);
+	snprintf(line, 256, "bppc:   %d", data->bppc_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "acc: %d", data->acc_fault);
+	snprintf(line, 256, "acc:    %d", data->acc_fault);
 	cli_putline(line);
 
-	snprintf(line, 256, "cli: %d", data->cli_fault);
+	snprintf(line, 256, "cli:    %d", data->cli_fault);
+	cli_putline(line);
+
+	snprintf(line, 256, "canbus: %d", data->canbus_fault);
 	cli_putline(line);
 	return 0;
 }

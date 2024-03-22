@@ -55,6 +55,4 @@ typedef struct {
 
 void board_init(board_t *dev);
 
-void set_brakelight(bool state);
-
 #endif

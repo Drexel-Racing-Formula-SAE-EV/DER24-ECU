@@ -31,6 +31,7 @@
 #define ERROR_FREQ 50
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
+#define CLI_FREQ 50
 
 #define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
@@ -81,5 +82,6 @@ HAL_StatusTypeDef write_time();
 void set_fw(bool state);
 void set_buzzer(bool state);
 void set_cascadia_enable(bool state);
+void set_brakelight(bool state);
 
 #endif
