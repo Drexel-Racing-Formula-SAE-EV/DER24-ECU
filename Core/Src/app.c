@@ -39,6 +39,8 @@ void app_create()
 	app.bppc_fault = false;
 	app.acc_fault = false;
 	app.cli_fault = false;
+	app.canbus_fault = false;
+	app.dashboard_fault = false;
 
 	app.tsal = false;
 	app.rtd_button = false;

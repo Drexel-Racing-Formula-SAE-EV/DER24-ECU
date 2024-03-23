@@ -45,22 +45,24 @@ void error_task_fn(void *arg)
 		data->imd_fail = HAL_GPIO_ReadPin(IMD_Fail_GPIO_Port, IMD_Fail_Pin);
 		data->bms_fail = HAL_GPIO_ReadPin(BMS_Fail_GPIO_Port, BMS_Fail_Pin);
 		data->bspd_fail = HAL_GPIO_ReadPin(BSPD_Fail_GPIO_Port, BSPD_Fail_Pin);
-        if(!data->hard_fault)
-        {
-            if(data->apps_fault || data->bse_fault)
-            {
-                data->hard_fault = true;
-            }
-        }
+
+		data->hard_fault = (data->apps_fault ||
+				            data->bse_fault ||
+							data->cascadia_error
+						    );
         
-        if(data->bppc_fault)
-        {
-            data->soft_fault = true;
-        }
-        else
-        {
-            data->soft_fault = false;
-        }
+        data->soft_fault =(data->bppc_fault ||
+        				   data->cli_fault ||
+						   data->acc_fault ||
+						   data->canbus_fault ||
+						   data->dashboard_fault
+						   );
+
+		if(data->hard_fault)
+		{
+			set_fw(0);
+			set_cascadia_enable(0);
+		}
 
         osDelayUntil(entry + (1000 / ERROR_FREQ));
     }

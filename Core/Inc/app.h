@@ -50,6 +50,7 @@ typedef struct {
 	bool acc_fault;
 	bool cli_fault;
 	bool canbus_fault;
+	bool dashboard_fault;
 	
 	bool tsal;
 	bool rtd_button;

@@ -34,22 +34,25 @@ void dashboard_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
     dashboard_t *dash = &data->board.dashboard;
     uint32_t entry;
+    HAL_StatusTypeDef ret;
 
 	for(;;)
 	{
 		entry = osKernelGetTickCount();
 		
+		ret = HAL_OK;
 		snprintf(dash->line, DASH_LINESZ, "throttle %d" NEWLINE, data->throttle);
-		dashboard_write(dash, dash->line);
+		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "brake %d" NEWLINE, data->brake);
-		dashboard_write(dash, dash->line);
+		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_state);
-		dashboard_write(dash, dash->line);
+		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "bmsfail %d" NEWLINE, data->bms_fail);
-		dashboard_write(dash, dash->line);
+		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "imdfail %d" NEWLINE, data->imd_fail);
-		dashboard_write(dash, dash->line);
+		ret |= dashboard_write(dash, dash->line);
 		// TODO: add rest of metrics after testing
+		data->dashboard_fault = (ret != HAL_OK);
 
 		osDelayUntil(entry + (1000 / DASH_FREQ));
 	}

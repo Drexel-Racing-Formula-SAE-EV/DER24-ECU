@@ -205,29 +205,23 @@ int set_time(int argc, char *argv[])
 int get_faults(int argc, char *argv[])
 {
 	cli_putline("System faults:");
-
 	snprintf(line, 256, "hard:   %d", data->hard_fault);
 	cli_putline(line);
-
+	snprintf(line, 256, "  apps:   %d", data->apps_fault);
+	cli_putline(line);
+	snprintf(line, 256, "  bse:    %d", data->bse_fault);
+	cli_putline(line);
 	snprintf(line, 256, "soft:   %d", data->soft_fault);
 	cli_putline(line);
-
-	snprintf(line, 256, "apps:   %d", data->apps_fault);
+	snprintf(line, 256, "  bppc:   %d", data->bppc_fault);
 	cli_putline(line);
-
-	snprintf(line, 256, "bse:    %d", data->bse_fault);
+	snprintf(line, 256, "  acc:    %d", data->acc_fault);
 	cli_putline(line);
-
-	snprintf(line, 256, "bppc:   %d", data->bppc_fault);
+	snprintf(line, 256, "  cli:    %d", data->cli_fault);
 	cli_putline(line);
-
-	snprintf(line, 256, "acc:    %d", data->acc_fault);
+	snprintf(line, 256, "  canbus: %d", data->canbus_fault);
 	cli_putline(line);
-
-	snprintf(line, 256, "cli:    %d", data->cli_fault);
-	cli_putline(line);
-
-	snprintf(line, 256, "canbus: %d", data->canbus_fault);
+	snprintf(line, 256, "  dash: %d", data->dashboard_fault);
 	cli_putline(line);
 	return 0;
 }
