@@ -13,6 +13,8 @@
 #include "tasks/dashboard_task.h"
 #include "main.h"
 
+#define NEWLINE "\r\n"
+
 /**
 * @brief Actual Dashboard task function
 *
@@ -37,9 +39,15 @@ void dashboard_task_fn(void *arg)
 	{
 		entry = osKernelGetTickCount();
 		
-		snprintf(dash->line, DASH_LINESZ, "throttle %d\r\n", data->throttle);
+		snprintf(dash->line, DASH_LINESZ, "throttle %d" NEWLINE, data->throttle);
 		dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "brake %d\r\n", data->brake);
+		snprintf(dash->line, DASH_LINESZ, "brake %d" NEWLINE, data->brake);
+		dashboard_write(dash, dash->line);
+		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_state);
+		dashboard_write(dash, dash->line);
+		snprintf(dash->line, DASH_LINESZ, "bmsfail %d" NEWLINE, data->bms_fail);
+		dashboard_write(dash, dash->line);
+		snprintf(dash->line, DASH_LINESZ, "imdfail %d" NEWLINE, data->imd_fail);
 		dashboard_write(dash, dash->line);
 		// TODO: add rest of metrics after testing
 
