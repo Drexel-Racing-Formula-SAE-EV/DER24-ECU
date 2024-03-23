@@ -1,0 +1,48 @@
+/**
+* @file dashboard_task.c
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-09-28
+*
+* @copyright Copyright (c) 2023
+*
+*/
+#include <stdio.h>
+
+#include "tasks/dashboard_task.h"
+#include "main.h"
+
+/**
+* @brief Actual Dashboard task function
+*
+* @param arg App_data struct pointer converted to void pointer
+*/
+void dashboard_task_fn(void *arg);
+
+TaskHandle_t dashboard_task_start(app_data_t *data)
+{
+   TaskHandle_t handle;
+   xTaskCreate(dashboard_task_fn, "Dashboard task", 128, (void *)data, 4, &handle);
+   return handle;
+}
+
+void dashboard_task_fn(void *arg)
+{
+    app_data_t *data = (app_data_t *)arg;
+    dashboard_t *dash = &data->board.dashboard;
+    uint32_t entry;
+
+	for(;;)
+	{
+		entry = osKernelGetTickCount();
+		
+		snprintf(dash->line, DASH_LINESZ, "throttle %d\r\n", data->throttle);
+		dashboard_write(dash, dash->line);
+		snprintf(dash->line, DASH_LINESZ, "brake %d\r\n", data->brake);
+		dashboard_write(dash, dash->line);
+		// TODO: add rest of metrics after testing
+
+		osDelayUntil(entry + (1000 / DASH_FREQ));
+	}
+}

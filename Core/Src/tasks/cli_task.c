@@ -55,7 +55,7 @@ void cli_task_fn(void *arg)
 {
     data = (app_data_t *)arg;
 	cli_device_t *cli = &data->board.cli;
-    uint32_t entryTicksCount;
+    uint32_t entry;
     char buf[CLI_LINE_SIZE] = {0};
     char *tokens[MAXTOKS];
     int n;
@@ -65,7 +65,7 @@ void cli_task_fn(void *arg)
 
 	for(;;)
 	{
-		entryTicksCount = osKernelGetTickCount();
+		entry = osKernelGetTickCount();
 		if(cli->msg_pending == true)
 		{
 			taskENTER_CRITICAL();
@@ -77,7 +77,7 @@ void cli_task_fn(void *arg)
 			cli->msg_pending = false;
 			cli->msg_proc++;
 		}
-		osDelayUntil(entryTicksCount + (1000 / CLI_FREQ));
+		osDelayUntil(entry + (1000 / CLI_FREQ));
 	}
 }
 

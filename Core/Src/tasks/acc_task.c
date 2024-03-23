@@ -31,16 +31,16 @@ void acc_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
     mpu6050_device_t *mpu6050 = &data->board.mpu6050;
     int ret = 0;
-    uint32_t entryTicksCount;
+    uint32_t entry;
 
     for(;;)
     {
-        entryTicksCount = osKernelGetTickCount();
+        entry = osKernelGetTickCount();
 
         ret = mpu6050_read(mpu6050);
         if(ret) data->acc_fault = true;
         else data->acc_fault = false;
 
-        osDelayUntil(entryTicksCount + (1000 / ACC_FREQ));
+        osDelayUntil(entry + (1000 / ACC_FREQ));
     }
 }

@@ -31,11 +31,11 @@ void error_task_fn(void *arg)
 	app_data_t *data = (app_data_t *)arg;
 	RTC_HandleTypeDef *hrtc = &data->board.stm32f767.hrtc;
 
-    uint32_t entryTicksCount;
+    uint32_t entry;
 
     for(;;)
     {
-        entryTicksCount = osKernelGetTickCount();
+        entry = osKernelGetTickCount();
 
         HAL_PWR_EnableBkUpAccess();
         HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR0, '*');
@@ -62,6 +62,6 @@ void error_task_fn(void *arg)
             data->soft_fault = false;
         }
 
-        osDelayUntil(entryTicksCount + (1000 / ERROR_FREQ));
+        osDelayUntil(entry + (1000 / ERROR_FREQ));
     }
 }

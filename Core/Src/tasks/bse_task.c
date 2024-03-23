@@ -32,11 +32,11 @@ void bse_task_fn(void *arg)
     pressure_sensor_t *bse1 = &data->board.bse1;
     pressure_sensor_t *bse2 = &data->board.bse2;
     float brake_raw;
-    uint32_t entryTicksCount;
+    uint32_t entry;
 
 	for(;;)
 	{
-		entryTicksCount = osKernelGetTickCount();
+		entry = osKernelGetTickCount();
 
 		stm32f767_adc_switch_channel(bse1->handle, bse1->channel);
 		bse1->count = stm32f767_adc_read(bse1->handle);
@@ -55,6 +55,6 @@ void bse_task_fn(void *arg)
 		data->brake = (int)brake_raw;
 		set_brakelight((data->brake >= BRAKE_LIGHT_THRESH));
 
-		osDelayUntil(entryTicksCount + (1000 / BSE_FREQ));
+		osDelayUntil(entry + (1000 / BSE_FREQ));
 	}
 }

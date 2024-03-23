@@ -20,6 +20,7 @@
 #include "tasks/canbus_task.h"
 #include "tasks/cli_task.h"
 #include "tasks/acc_task.h"
+#include "tasks/dashboard_task.h"
 
 app_data_t app = {0};
 
@@ -65,6 +66,7 @@ void app_create()
 	assert(app.apps_task = apps_task_start(&app));
 	assert(app.bppc_task = bppc_task_start(&app));
 	assert(app.acc_task = acc_task_start(&app));
+	assert(app.dashboard_task = dashboard_task_start(&app));
 
 	set_fw(1);
 }

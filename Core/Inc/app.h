@@ -32,6 +32,7 @@
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
 #define CLI_FREQ 50
+#define DASH_FREQ 5
 
 #define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
@@ -73,6 +74,7 @@ typedef struct {
 	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
 	TaskHandle_t acc_task;
+	TaskHandle_t dashboard_task;
 } app_data_t;
 
 void app_create();

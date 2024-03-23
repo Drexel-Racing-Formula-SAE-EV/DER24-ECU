@@ -42,7 +42,7 @@ void apps_task_fn(void *arg)
     float throttle_raw;
     uint16_t throttleHex;
     canbus_packet_t TxPacket;
-    uint32_t entryTicksCount;
+    uint32_t entry;
 
     for(uint8_t i = 0; i < 8; i++)
     {
@@ -54,7 +54,7 @@ void apps_task_fn(void *arg)
 
     for(;;)
     {
-        entryTicksCount = osKernelGetTickCount();
+        entry = osKernelGetTickCount();
 
         apps1->count = stm32f767_adc_read(apps1->handle);
         apps2->count = stm32f767_adc_read(apps2->handle);
@@ -100,6 +100,6 @@ void apps_task_fn(void *arg)
             xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
         //}
 
-        osDelayUntil(entryTicksCount + (1000 / APPS_FREQ));
+        osDelayUntil(entry + (1000 / APPS_FREQ));
     }
 }

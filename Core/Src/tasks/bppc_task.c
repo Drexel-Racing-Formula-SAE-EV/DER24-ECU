@@ -30,14 +30,14 @@ void bppc_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
 	   
-    uint32_t entryTicksCount;
+    uint32_t entry;
 	bool brakesEnganged = false;
 	bool throttleEngaged = false;
 	bool throttleReleased = true;
 
 	for(;;)
 	{
-		entryTicksCount = osKernelGetTickCount();
+		entry = osKernelGetTickCount();
 
 		brakesEnganged = (data->brake > BPPC_BSE_THRESH);
 		throttleEngaged = (data->throttle > BPPC_APPS_H_THRESH);
@@ -56,6 +56,6 @@ void bppc_task_fn(void *arg)
 			data->bppc_fault = true;
 		}
 
-		osDelayUntil(entryTicksCount + (1000 / BPPC_FREQ));
+		osDelayUntil(entry + (1000 / BPPC_FREQ));
 	}
 }
