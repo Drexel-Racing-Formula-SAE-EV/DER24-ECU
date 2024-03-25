@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 void MX_GPIO_Init(void);
@@ -92,6 +94,8 @@ void MX_I2C2_Init(void);
 #define Firmware_Ok_GPIO_Port GPIOA
 #define TSAL_HV_SIG_Pin GPIO_PIN_5
 #define TSAL_HV_SIG_GPIO_Port GPIOC
+#define SSA_LED_Pin GPIO_PIN_1
+#define SSA_LED_GPIO_Port GPIOB
 #define MTR_Fault_Pin GPIO_PIN_2
 #define MTR_Fault_GPIO_Port GPIOB
 #define MTR_Ok_Pin GPIO_PIN_12

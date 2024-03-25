@@ -31,7 +31,7 @@ int get_time(int argc, char *argv[]);
 int set_time(int argc, char *argv[]);
 int get_faults(int argc, char *argv[]);
 
-char line[256];
+char outline[256];
 app_data_t *data;
 command_t cmds[] =
 {
@@ -103,8 +103,8 @@ void cli_handle_cmd(int argc, char *argv[])
 
 void cmd_not_found(int argc, char *argv[])
 {
-	snprintf(line, 256, "Command not found: \'%s\'", argv[0]);
-	cli_putline(line);
+	snprintf(outline, 256, "Command not found: \'%s\'", argv[0]);
+	cli_putline(outline);
 	cli_putline("Type 'help' for list of commands");
 }
 
@@ -117,44 +117,44 @@ int help(int argc, char *argv[])
 	num_cmds = sizeof(cmds) / sizeof(command_t);
 	for(i = 0; i < num_cmds; i++)
 	{
-		snprintf(line, 256, "%s - %s", cmds[i].name, cmds[i].desc);
-		cli_putline(line);
+		snprintf(outline, 256, "%s - %s", cmds[i].name, cmds[i].desc);
+		cli_putline(outline);
 	}
 	return 0;
 }
 
 int get_throttle(int argc, char *argv[])
 {
-	snprintf(line, 256, "throttle: %3d%%", data->throttle);
-	cli_putline(line);
+	snprintf(outline, 256, "throttle: %3d%%", data->throttle);
+	cli_putline(outline);
 	return 0;
 }
 
 int get_brakelight(int argc, char *argv[])
 {
-	snprintf(line, 256, "brakelight: %s", data->brakelight ? "ON" : "OFF");
-	cli_putline(line);
+	snprintf(outline, 256, "brakelight: %s", data->brakelight ? "ON" : "OFF");
+	cli_putline(outline);
 	return 0;
 }
 
 int get_brake(int argc, char *argv[])
 {
-	snprintf(line, 256, "brake: %3d%%", data->brake);
-	cli_putline(line);
+	snprintf(outline, 256, "brake: %3d%%", data->brake);
+	cli_putline(outline);
 	return 0;
 }
 
 int get_time(int argc, char *argv[])
 {
 	read_time();
-	snprintf(line, 256, "RTC: %02d/%02d/%d-%02d:%02d:%02d",
+	snprintf(outline, 256, "RTC: %02d/%02d/%d-%02d:%02d:%02d",
 			data->datetime.month,
 			data->datetime.day,
 			data->datetime.year,
 			data->datetime.hour,
 			data->datetime.minute,
 			data->datetime.second);
-	cli_putline(line);
+	cli_putline(outline);
 	return 0;
 }
 
@@ -190,7 +190,7 @@ int set_time(int argc, char *argv[])
 	data->datetime.second = second;
 	write_time();
 
-	snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
+	snprintf(outline, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
 			data->datetime.month,
 			data->datetime.day,
 			data->datetime.year,
@@ -198,31 +198,31 @@ int set_time(int argc, char *argv[])
 			data->datetime.minute,
 			data->datetime.second
 			);
-	cli_putline(line);
+	cli_putline(outline);
 	return 0;
 }
 
 int get_faults(int argc, char *argv[])
 {
 	cli_putline("System faults:");
-	snprintf(line, 256, "hard:   %d", data->hard_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  apps:   %d", data->apps_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  bse:    %d", data->bse_fault);
-	cli_putline(line);
-	snprintf(line, 256, "soft:   %d", data->soft_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  bppc:   %d", data->bppc_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  acc:    %d", data->acc_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  cli:    %d", data->cli_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  canbus: %d", data->canbus_fault);
-	cli_putline(line);
-	snprintf(line, 256, "  dash: %d", data->dashboard_fault);
-	cli_putline(line);
+	snprintf(outline, 256, "hard:   %d", data->hard_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  apps:   %d", data->apps_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  bse:    %d", data->bse_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "soft:   %d", data->soft_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  bppc:   %d", data->bppc_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  acc:    %d", data->acc_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  cli:    %d", data->cli_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  canbus: %d", data->canbus_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  dash: %d", data->dashboard_fault);
+	cli_putline(outline);
 	return 0;
 }
 
