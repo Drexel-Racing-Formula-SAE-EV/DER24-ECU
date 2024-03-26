@@ -13,6 +13,7 @@
 #include "main.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
 * @brief Actual CLI task function
@@ -30,6 +31,7 @@ int get_brake(int argc, char *argv[]);
 int get_time(int argc, char *argv[]);
 int set_time(int argc, char *argv[]);
 int get_faults(int argc, char *argv[]);
+int set_ssa(int argc, char *argv[]);
 
 char outline[256];
 app_data_t *data;
@@ -41,7 +43,8 @@ command_t cmds[] =
 	{"brake", &get_brake, "get the brake percentage"},
 	{"gtime", &get_time, "get the RTC"},
 	{"stime", &set_time, "set the RTC. format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM"},
-	{"fault", &get_faults, "gets the faults of the system"}
+	{"fault", &get_faults, "gets the faults of the system"},
+	{"ssa", &set_ssa, "set the SSA light duty cycle"}
 };
 
 TaskHandle_t cli_task_start(app_data_t *data)
@@ -224,5 +227,37 @@ int get_faults(int argc, char *argv[])
 	snprintf(outline, 256, "  dash: %d", data->dashboard_fault);
 	cli_putline(outline);
 	return 0;
+}
+
+int set_ssa(int argc, char *argv[])
+{
+	int ret;
+	if(argc == 1)
+	{
+		snprintf(outline, 256, "%d%%", (int)(TIM3->CCR4 * 100 / 65535));
+		cli_putline(outline);
+	}
+	else if(argc == 2)
+	{
+		int duty = atoi(argv[1]);
+		if(duty >= 0 && duty <= 100)
+		{
+			snprintf(outline, 256, "setting ssa to %d%%", duty);
+			cli_putline(outline);
+			TIM3->CCR4 = 65535 * duty / 100;;
+			ret = 0;
+		}
+		else
+		{
+			cli_putline("ERROR: ssa duty must be 0<= Duty <= 100");
+			return 1;
+		}
+	}
+	else
+	{
+		cli_putline("ERROR: too many arguments to ssa");
+		return 1;
+	}
+	return ret;
 }
 

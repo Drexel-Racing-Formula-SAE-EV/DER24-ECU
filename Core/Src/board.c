@@ -15,6 +15,9 @@
 void board_init(board_t *dev)
 {
 	stm32f767_init(&dev->stm32f767);
+	//HAL_TIM_Base_Start(&dev->stm32f767.htim3);
+	HAL_TIM_PWM_Start(&dev->stm32f767.htim3, TIM_CHANNEL_4);
+	TIM3->CCR4 = 65535;
 
 	poten_init(&dev->apps1, APPS1_0, APPS1_100, &dev->stm32f767.hadc1);
 	poten_init(&dev->apps2, APPS2_0, APPS2_100, &dev->stm32f767.hadc2);

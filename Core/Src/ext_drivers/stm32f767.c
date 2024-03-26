@@ -56,6 +56,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 	MX_ADC2_Init();
 	MX_ADC3_Init();
 	MX_SPI6_Init();
+	MX_TIM3_Init();
 	MX_TIM5_Init();
 	MX_USART3_UART_Init();
 	MX_UART7_Init();
@@ -74,6 +75,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 
 	extern SPI_HandleTypeDef hspi6;
 
+	extern TIM_HandleTypeDef htim3;
 	extern TIM_HandleTypeDef htim5;
 
 	extern UART_HandleTypeDef huart7;
@@ -86,6 +88,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 	dev->hi2c2 = hi2c2;
 	dev->hrtc = hrtc;
 	dev->hspi6 = hspi6;
+	dev->htim3 = htim3;
 	dev->htim5 = htim5;
 	dev->huart3 = huart3;
 	dev->huart7 = huart7;
