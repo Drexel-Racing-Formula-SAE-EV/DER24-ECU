@@ -46,6 +46,9 @@ void error_task_fn(void *arg)
 		data->bms_fail = HAL_GPIO_ReadPin(BMS_Fail_GPIO_Port, BMS_Fail_Pin);
 		data->bspd_fail = HAL_GPIO_ReadPin(BSPD_Fail_GPIO_Port, BSPD_Fail_Pin);
 
+		if(data->imd_fail || data->bms_fail || data->bspd_fail) set_ssa(100);
+		else set_ssa(0);
+
 		data->hard_fault = (data->apps_fault ||
 				            data->bse_fault ||
 							data->cascadia_error

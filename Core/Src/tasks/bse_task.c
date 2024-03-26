@@ -53,6 +53,7 @@ void bse_task_fn(void *arg)
 
 		brake_raw = (bse1->percent + bse2->percent) / 2;
 		data->brake = (int)brake_raw;
+		data->brake = 10;
 		set_brakelight((data->brake >= BRAKE_LIGHT_THRESH));
 
 		osDelayUntil(entry + (1000 / BSE_FREQ));

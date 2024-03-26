@@ -85,5 +85,6 @@ void set_fw(bool state);
 void set_buzzer(bool state);
 void set_cascadia_enable(bool state);
 void set_brakelight(bool state);
+void set_ssa(int duty);
 
 #endif

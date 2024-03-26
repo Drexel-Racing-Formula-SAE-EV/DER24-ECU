@@ -154,3 +154,10 @@ void set_brakelight(bool state)
 	app.brakelight = state;
 	HAL_GPIO_WritePin(Brake_Light_GPIO_Port, Brake_Light_Pin, state);
 }
+
+void set_ssa(int duty)
+{
+	if(duty > 100) duty = 100;
+	else if(duty < 0) duty = 0;
+	TIM3->CCR4 = 65535 * duty / 100;
+}

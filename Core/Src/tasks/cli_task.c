@@ -31,7 +31,7 @@ int get_brake(int argc, char *argv[]);
 int get_time(int argc, char *argv[]);
 int set_time(int argc, char *argv[]);
 int get_faults(int argc, char *argv[]);
-int set_ssa(int argc, char *argv[]);
+int ssa(int argc, char *argv[]);
 
 char outline[256];
 app_data_t *data;
@@ -44,7 +44,7 @@ command_t cmds[] =
 	{"gtime", &get_time, "get the RTC"},
 	{"stime", &set_time, "set the RTC. format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM"},
 	{"fault", &get_faults, "gets the faults of the system"},
-	{"ssa", &set_ssa, "set the SSA light duty cycle"}
+	{"ssa", &ssa, "set the SSA light duty cycle"}
 };
 
 TaskHandle_t cli_task_start(app_data_t *data)
@@ -229,7 +229,7 @@ int get_faults(int argc, char *argv[])
 	return 0;
 }
 
-int set_ssa(int argc, char *argv[])
+int ssa(int argc, char *argv[])
 {
 	int ret;
 	if(argc == 1)
@@ -244,7 +244,7 @@ int set_ssa(int argc, char *argv[])
 		{
 			snprintf(outline, 256, "setting ssa to %d%%", duty);
 			cli_putline(outline);
-			TIM3->CCR4 = 65535 * duty / 100;;
+			set_ssa(duty);
 			ret = 0;
 		}
 		else
