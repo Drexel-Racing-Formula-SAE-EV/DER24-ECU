@@ -21,6 +21,7 @@
 #include "tasks/cli_task.h"
 #include "tasks/acc_task.h"
 #include "tasks/dashboard_task.h"
+#include "tasks/cool_task.h"
 
 app_data_t app = {0};
 
@@ -52,6 +53,8 @@ void app_create()
 
 	app.brakelight = false;
 
+	app.coolant_pressure = 0.0;
+
 	app.throttle = 0;
 	app.brake = 0;
 
@@ -69,6 +72,7 @@ void app_create()
 	assert(app.bppc_task = bppc_task_start(&app));
 	assert(app.acc_task = acc_task_start(&app));
 	assert(app.dashboard_task = dashboard_task_start(&app));
+	assert(app.cool_task = cool_task_start(&app));
 
 	set_fw(1);
 }

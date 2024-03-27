@@ -23,6 +23,8 @@ void board_init(board_t *dev)
 	poten_init(&dev->apps2, APPS2_0, APPS2_100, &dev->stm32f767.hadc2);
 	pressure_sensor_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, BSE1_ADC_CH);
 	pressure_sensor_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, BSE2_ADC_CH);
+	pressure_sensor_init(&dev->cool_pressure, COOL_PRESS_MIN, COOL_PRESS_MAX, &dev->stm32f767.hadc3, COOL_PRESS_ADC_CH);
+	flow_sensor_init(&dev->cool_flow, 54000000, &dev->stm32f767.htim5, TIM5, TIM_CHANNEL_2, TIM_CHANNEL_1);
 
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 

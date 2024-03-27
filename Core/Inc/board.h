@@ -21,6 +21,7 @@
 #include "ext_drivers/cli.h"
 #include "ext_drivers/mpu6050.h"
 #include "ext_drivers/dashboard.h"
+#include "ext_drivers/flow_sensor.h"
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
@@ -28,9 +29,14 @@
 // 0.14V -1.8V *(3/2) => 0.21V - 2.7V
 #define BSE2_MIN 175 //Brake emulator min: 175 //Theoretical value (ADC max): 810
 #define BSE2_MAX 2250 //Brake emulator max: 2250 //Theoretical value (ADC max): 2158
+// TODO: Calibrate
+// 0.5V-4.5V Sensor output * 2/3 VDiv = 0.33V-3V * 4095 / 3.3V = 413Ct-3723Ct
+#define COOL_PRESS_MIN 413
+#define COOL_PRESS_MAX 3723
 
 #define BSE1_ADC_CH 13
 #define BSE2_ADC_CH 9
+#define COOL_PRESS_ADC_CH 7
 
 #define APPS1_0 85
 #define APPS1_100 230
@@ -43,12 +49,13 @@
 #define MTR_CMD_ID 0x0C0
 
 typedef struct {
-	// Physical devices on the board
 	stm32f767_device_t stm32f767;
-	pressure_sensor_t bse1;
-	pressure_sensor_t bse2;
 	poten_t apps1;
 	poten_t apps2;
+	pressure_sensor_t bse1;
+	pressure_sensor_t bse2;
+	pressure_sensor_t cool_pressure;
+ 	flow_sensor_t cool_flow;
  	canbus_device_t canbus_device;
 	cli_device_t cli;
 	mpu6050_device_t mpu6050;

@@ -58,6 +58,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
+extern TIM_HandleTypeDef htim5;
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim7;
@@ -202,6 +203,24 @@ void USART3_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles TIM5 global interrupt.
+  */
+void TIM5_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM5_IRQn 0 */
+	extern app_data_t app;
+
+	TIM_HandleTypeDef *htim5 = app.board.cool_flow.htim;
+#if 0
+  /* USER CODE END TIM5_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE BEGIN TIM5_IRQn 1 */
+#endif
+  HAL_TIM_IRQHandler(htim5);
+  /* USER CODE END TIM5_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM7 global interrupt.
   */
 void TIM7_IRQHandler(void)
@@ -301,5 +320,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	osMessageQueuePut(app.board.stm32f767.can1_mq, rx_packet, 0, 0);
 	// Notify CANBus task about received message
 	xTaskNotifyFromISR(app.canbus_task, CANBUS_ISR, eSetBits, &task);
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+	extern app_data_t app;
+	flow_sensor_t *cool_flow = &app.board.cool_flow;
+
+	if(htim->Instance == cool_flow->htim->Instance && htim->Channel == cool_flow->total_channel) flow_sensor_read(cool_flow);
 }
 /* USER CODE END 1 */
