@@ -54,6 +54,9 @@ void app_create()
 	app.brakelight = false;
 
 	app.coolant_pressure = 0.0;
+	app.coolant_flow = 0.0;
+	app.coolant_temp_in = 0.0;
+	app.coolant_temp_out = 0.0;
 
 	app.throttle = 0;
 	app.brake = 0;

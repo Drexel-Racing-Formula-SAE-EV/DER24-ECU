@@ -22,6 +22,7 @@
 #include "ext_drivers/mpu6050.h"
 #include "ext_drivers/dashboard.h"
 #include "ext_drivers/flow_sensor.h"
+#include "ext_drivers/ntc.h"
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
@@ -37,6 +38,8 @@
 #define BSE1_ADC_CH 13
 #define BSE2_ADC_CH 9
 #define COOL_PRESS_ADC_CH 7
+#define COOL_TEMP1_CH 15
+#define COOL_TEMP2_CH 14
 
 #define APPS1_0 85
 #define APPS1_100 230
@@ -56,6 +59,8 @@ typedef struct {
 	pressure_sensor_t bse2;
 	pressure_sensor_t cool_pressure;
  	flow_sensor_t cool_flow;
+ 	ntc_t cool_temp1;
+ 	ntc_t cool_temp2;
  	canbus_device_t canbus_device;
 	cli_device_t cli;
 	mpu6050_device_t mpu6050;

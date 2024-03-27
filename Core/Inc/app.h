@@ -67,6 +67,9 @@ typedef struct {
 	bool brakelight;
 
 	float coolant_pressure;
+	float coolant_flow;
+	float coolant_temp_in;
+	float coolant_temp_out;
 
 	board_t board;
 	datetime_t datetime;

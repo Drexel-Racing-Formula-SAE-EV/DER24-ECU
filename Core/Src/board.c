@@ -15,7 +15,6 @@
 void board_init(board_t *dev)
 {
 	stm32f767_init(&dev->stm32f767);
-	//HAL_TIM_Base_Start(&dev->stm32f767.htim3);
 	HAL_TIM_PWM_Start(&dev->stm32f767.htim3, TIM_CHANNEL_4);
 	TIM3->CCR4 = 0;
 
@@ -25,6 +24,8 @@ void board_init(board_t *dev)
 	pressure_sensor_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, BSE2_ADC_CH);
 	pressure_sensor_init(&dev->cool_pressure, COOL_PRESS_MIN, COOL_PRESS_MAX, &dev->stm32f767.hadc3, COOL_PRESS_ADC_CH);
 	flow_sensor_init(&dev->cool_flow, 54000000, &dev->stm32f767.htim5, TIM5, TIM_CHANNEL_2, TIM_CHANNEL_1);
+	ntc_init(&dev->cool_temp1, &dev->stm32f767.hadc3, COOL_TEMP1_CH);
+	ntc_init(&dev->cool_temp2, &dev->stm32f767.hadc3, COOL_TEMP2_CH);
 
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 
