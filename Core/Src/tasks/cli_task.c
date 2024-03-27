@@ -25,6 +25,7 @@ void cli_handle_cmd(int argc, char *argv[]);
 void cmd_not_found(int argc, char *argv[]);
 
 int help(int argc, char *argv[]);
+int id(int argc, char *argv[]);
 int get_throttle(int argc, char *argv[]);
 int get_brakelight(int argc, char *argv[]);
 int get_brake(int argc, char *argv[]);
@@ -38,6 +39,7 @@ app_data_t *data;
 command_t cmds[] =
 {
 	{"help", &help, "print help menu"},
+	{"id", &id, "identifies system"},
 	{"throttle", &get_throttle, "get the throttle percentage"},
 	{"brakelight", &get_brakelight, "get the brake light status"},
 	{"brake", &get_brake, "get the brake percentage"},
@@ -63,7 +65,7 @@ void cli_task_fn(void *arg)
     char *tokens[MAXTOKS];
     int n;
 	
-	cli_putline("~~~~~~~~~~ DER ECU FW V0.1~~~~~~~~~~");
+	cli_putline("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	cli_putline("Type 'help' for list of commands");
 
 	for(;;)
@@ -123,6 +125,13 @@ int help(int argc, char *argv[])
 		snprintf(outline, 256, "%s - %s", cmds[i].name, cmds[i].desc);
 		cli_putline(outline);
 	}
+	return 0;
+}
+
+int id(int argc, char *argv[])
+{
+    snprintf(outline, 256, "DER ECU FW V%d.%d", VER_MAJOR, VER_MINOR);
+	cli_putline(outline);
 	return 0;
 }
 
