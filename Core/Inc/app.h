@@ -19,8 +19,9 @@
 #include "board.h"
 #include "ext_drivers/rtc.h"
 
-#define VER_MAJOR 0
-#define VER_MINOR 1
+#define VER_MAJOR 1
+#define VER_MINOR 10
+#define VER_BUG   0
 
 #define PLAUSIBILITY_THRESH 10
 #define BRAKE_LIGHT_THRESH 5

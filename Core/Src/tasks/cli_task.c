@@ -65,7 +65,7 @@ void cli_task_fn(void *arg)
     char *tokens[MAXTOKS];
     int n;
 	
-	cli_putline("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	cli_putline("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	cli_putline("Type 'help' for list of commands");
 
 	for(;;)
@@ -130,7 +130,7 @@ int help(int argc, char *argv[])
 
 int id(int argc, char *argv[])
 {
-    snprintf(outline, 256, "DER ECU FW V%d.%d", VER_MAJOR, VER_MINOR);
+    snprintf(outline, 256, "DER ECU FW V%d.%d.%d", VER_MAJOR, VER_MINOR, VER_BUG);
 	cli_putline(outline);
 	return 0;
 }
