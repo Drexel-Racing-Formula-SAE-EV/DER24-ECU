@@ -164,7 +164,8 @@ void set_brakelight(bool state)
 
 void set_ssa(int duty)
 {
+
 	if(duty > 100) duty = 100;
 	else if(duty < 0) duty = 0;
-	TIM3->CCR4 = 65535 * duty / 100;
+	pwm_set_percent(&app.board.ssa, duty);
 }
