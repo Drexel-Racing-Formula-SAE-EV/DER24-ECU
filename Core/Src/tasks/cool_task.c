@@ -38,6 +38,7 @@ void cool_task_fn(void *arg)
     flow_sensor_t *flow = &data->board.cool_flow;
     ntc_t *temp1 = &data->board.cool_temp1;
     ntc_t *temp2 = &data->board.cool_temp2;
+    pwm_device_t *pump = &data->board.cool_pump;
 
     uint32_t entry;
 
@@ -62,6 +63,9 @@ void cool_task_fn(void *arg)
 		temp2->count = stm32f767_adc_read(temp2->hadc);
 		temp2->temp = NXFT15XV103FEAB050_convert(temp2->count);
 		data->coolant_temp_out = temp2->temp;
+
+		// TODO: determine pump speed requirements
+		pwm_set_percent(pump, 10);
 
 		osDelayUntil(entry + (1000 / COOL_FREQ));
 	}
