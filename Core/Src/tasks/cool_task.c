@@ -12,6 +12,8 @@
 #include "tasks/cool_task.h"
 #include "main.h"
 
+#define BV2000_350_PPL 750
+
 /**
 * @brief Actual COOL task function
 *
@@ -20,6 +22,7 @@
 void cool_task_fn(void *arg);
 
 float NXFT15XV103FEAB050_convert(uint16_t count);
+float BV2000_350_convert(float freq);
 
 TaskHandle_t cool_task_start(app_data_t *data)
 {
@@ -48,7 +51,7 @@ void cool_task_fn(void *arg)
 		press->percent = pressure_sensor_get_percent(press);
 		data->coolant_pressure = (float)press->count * 3.3 / 4096.0;
 
-		data->coolant_flow = flow->freq;
+		data->coolant_flow = BV2000_350_convert(flow->freq);
 
 		stm32f767_adc_switch_channel(temp1->hadc, temp1->channel);
 		temp1->count = stm32f767_adc_read(temp1->hadc);
@@ -70,4 +73,9 @@ float NXFT15XV103FEAB050_convert(uint16_t count)
 
 	float temp = voltage * 2.0; // TODO: replace with real conversion func
 	return temp;
+}
+
+float BV2000_350_convert(float freq)
+{
+	return freq * 60.0 / (float)BV2000_350_PPL; // Returns Liters per Minute
 }
