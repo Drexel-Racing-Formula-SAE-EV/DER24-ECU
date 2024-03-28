@@ -15,11 +15,3 @@ void ntc_init(ntc_t *dev, ADC_HandleTypeDef *hadc, uint32_t channel)
 	dev->count = 0;
 	dev->temp = 0.0;
 }
-
-float ntc_convert(ntc_t *dev)
-{
-	float calc = 0.0;
-	// TODO: convert count to temperature
-	dev->temp = calc;
-	return calc;
-}

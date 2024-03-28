@@ -20,6 +20,5 @@ typedef struct
 } ntc_t;
 
 void ntc_init(ntc_t *dev, ADC_HandleTypeDef *hadc, uint32_t channel);
-float ntc_convert(ntc_t *dev);
 
 #endif /* __NTC_H_ */

@@ -19,6 +19,8 @@
 */
 void cool_task_fn(void *arg);
 
+float NXFT15XV103FEAB050_convert(uint16_t count);
+
 TaskHandle_t cool_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
@@ -50,12 +52,22 @@ void cool_task_fn(void *arg)
 
 		stm32f767_adc_switch_channel(temp1->hadc, temp1->channel);
 		temp1->count = stm32f767_adc_read(temp1->hadc);
-		data->coolant_temp_in = ntc_convert(temp1);
+		temp1->temp = NXFT15XV103FEAB050_convert(temp1->count);
+		data->coolant_temp_in = temp1->temp;
 
 		stm32f767_adc_switch_channel(temp2->hadc, temp2->channel);
 		temp2->count = stm32f767_adc_read(temp2->hadc);
-		data->coolant_temp_out = ntc_convert(temp2);
+		temp2->temp = NXFT15XV103FEAB050_convert(temp2->count);
+		data->coolant_temp_out = temp2->temp;
 
 		osDelayUntil(entry + (1000 / COOL_FREQ));
 	}
+}
+
+float NXFT15XV103FEAB050_convert(uint16_t count)
+{
+	float voltage = (float)count * 3.3 / 4095;
+
+	float temp = voltage * 2.0; // TODO: replace with real conversion func
+	return temp;
 }
