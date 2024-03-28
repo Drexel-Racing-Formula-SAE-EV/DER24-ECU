@@ -25,11 +25,8 @@ void board_init(board_t *dev)
 	ntc_init(&dev->cool_temp1, &dev->stm32f767.hadc3, COOL_TEMP1_CH);
 	ntc_init(&dev->cool_temp2, &dev->stm32f767.hadc3, COOL_TEMP2_CH);
 	pwm_device_init(&dev->cool_pump, TIM4, &dev->stm32f767.htim4, 65535, &TIM4->CCR3, 3);
-
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
-
 	cli_device_init(&dev->cli, &dev->stm32f767.huart3);
-
 	pwm_device_init(&dev->ssa, TIM3, &dev->stm32f767.htim3, 65535, &TIM3->CCR4, 4);
 
 	mpu6050_config_t mpu6050_conf = {0};

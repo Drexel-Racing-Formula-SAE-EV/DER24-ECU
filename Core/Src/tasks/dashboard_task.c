@@ -47,9 +47,11 @@ void dashboard_task_fn(void *arg)
 		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_state);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "bmsfail %d" NEWLINE, data->bms_fail);
+		snprintf(dash->line, DASH_LINESZ, "bms_fail %d" NEWLINE, data->bms_fail);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "imdfail %d" NEWLINE, data->imd_fail);
+		snprintf(dash->line, DASH_LINESZ, "imd_fail %d" NEWLINE, data->imd_fail);
+		ret |= dashboard_write(dash, dash->line);
+		snprintf(dash->line, DASH_LINESZ, "ecu_fault %d" NEWLINE, data->hard_fault);
 		ret |= dashboard_write(dash, dash->line);
 		// TODO: add rest of metrics after testing
 		data->dashboard_fault = (ret != HAL_OK);
