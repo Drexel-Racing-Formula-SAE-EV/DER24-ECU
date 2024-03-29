@@ -17,6 +17,7 @@
 
 typedef struct
 {
+	uint16_t header;
 	uint16_t *d0;
 	uint16_t *d1;
 	uint16_t *d2;
