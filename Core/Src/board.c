@@ -28,6 +28,7 @@ void board_init(board_t *dev)
 	canbus_device_init(&dev->canbus_device, &dev->stm32f767.hcan1, &dev->stm32f767.can1_txheader);
 	cli_device_init(&dev->cli, &dev->stm32f767.huart3);
 	pwm_device_init(&dev->ssa, TIM3, &dev->stm32f767.htim3, 65535, &TIM3->CCR4, 4);
+	ams_init(&dev->ams);
 
 	mpu6050_config_t mpu6050_conf = {0};
 	mpu6050_conf.addr_7bit = MPU6050_ADDR1;

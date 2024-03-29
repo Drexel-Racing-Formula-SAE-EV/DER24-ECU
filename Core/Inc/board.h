@@ -24,6 +24,7 @@
 #include "ext_drivers/flow_sensor.h"
 #include "ext_drivers/ntc.h"
 #include "ext_drivers/pwm.h"
+#include "ext_drivers/ams.h"
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
@@ -68,6 +69,7 @@ typedef struct {
 	mpu6050_device_t mpu6050;
 	dashboard_t dashboard;
 	pwm_device_t ssa;
+	ams_t ams;
 } board_t;
 
 void board_init(board_t *dev);
