@@ -233,7 +233,9 @@ int get_faults(int argc, char *argv[])
 	cli_putline(outline);
 	snprintf(outline, 256, "  canbus: %d", data->canbus_fault);
 	cli_putline(outline);
-	snprintf(outline, 256, "  dash: %d", data->dashboard_fault);
+	snprintf(outline, 256, "  dash:   %d", data->dashboard_fault);
+	cli_putline(outline);
+	snprintf(outline, 256, "  mq:     %d", data->mq_fault);
 	cli_putline(outline);
 	return 0;
 }

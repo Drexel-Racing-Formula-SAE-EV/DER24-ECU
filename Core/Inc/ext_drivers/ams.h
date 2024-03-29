@@ -17,6 +17,13 @@
 
 typedef struct
 {
+	uint16_t *d0;
+	uint16_t *d1;
+	uint16_t *d2;
+} ams_data_packet_t;
+
+typedef struct
+{
 	uint16_t volts[NVOLTS];
 	uint16_t temps[NTEMPS];
 } segment_t;
