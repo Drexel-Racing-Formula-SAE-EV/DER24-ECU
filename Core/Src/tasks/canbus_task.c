@@ -39,7 +39,7 @@ void canbus_task_fn(void *arg)
     osStatus_t mq_status;
     uint32_t taskNotification;
     // See ECU_AMS_CANBUS_Protocol.xlsx
-    ams_data_packet_t dest[] = {
+    ams_data_packet_t ams_data_dest[] = {
     		{&ams->air_status,        &ams->imd_status,        &ams->current},
 			{&ams->max_temp,          &ams->min_volt,          &ams->max_volt},
     		{&ams->segs[0].volts[0],  &ams->segs[0].volts[1],  &ams->segs[0].volts[2]},
@@ -121,10 +121,10 @@ void canbus_task_fn(void *arg)
             	uint16_t data0  = ((uint16_t)can_packet.data[2] << 8) | can_packet.data[3];
             	uint16_t data1  = ((uint16_t)can_packet.data[4] << 8) | can_packet.data[5];
             	uint16_t data2  = ((uint16_t)can_packet.data[6] << 8) | can_packet.data[7];
-            	ams_data_packet_t locs = dest[header];
-            	if(locs.d0) *locs.d0 = data0;
-            	if(locs.d1) *locs.d1 = data1;
-            	if(locs.d2) *locs.d2 = data2;
+            	ams_data_packet_t packet_locs = ams_data_dest[header];
+            	if(packet_locs.d0) *packet_locs.d0 = data0;
+            	if(packet_locs.d1) *packet_locs.d1 = data1;
+            	if(packet_locs.d2) *packet_locs.d2 = data2;
             	// TODO: Implement data logging function
             }
         }
