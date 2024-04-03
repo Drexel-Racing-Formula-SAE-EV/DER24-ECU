@@ -22,4 +22,6 @@ void canbus_device_init(canbus_device_t *dev, CAN_HandleTypeDef *hcan, CAN_TxHea
     dev->tx_header->RTR = CAN_RTR_DATA;
     dev->tx_header->DLC = 8;
     dev->tx_header->TransmitGlobalTime = DISABLE;
+
+    HAL_CAN_Start(hcan);
 }
