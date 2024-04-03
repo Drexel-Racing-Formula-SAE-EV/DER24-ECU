@@ -123,9 +123,12 @@ void canbus_task_fn(void *arg)
             	uint16_t data2  = ((uint16_t)can_packet.data[6] << 8) | can_packet.data[7];
             	ams_data_packet_t packet_locs = ams_data_dest[header];
             	uint16_t packet_header = packet_locs.header;
-            	if(packet_locs.d0) *packet_locs.d0 = data0;
-            	if(packet_locs.d1) *packet_locs.d1 = data1;
-            	if(packet_locs.d2) *packet_locs.d2 = data2;
+            	if(packet_header == header)
+            	{
+            		if(packet_locs.d0) *packet_locs.d0 = data0;
+            		if(packet_locs.d1) *packet_locs.d1 = data1;
+            		if(packet_locs.d2) *packet_locs.d2 = data2;
+            	}
             	// TODO: Implement data logging function
             }
         }
