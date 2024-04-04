@@ -57,6 +57,7 @@ void stm32f767_init(stm32f767_device_t *dev)
 	MX_ADC3_Init();
 	MX_SPI6_Init();
 	MX_TIM3_Init();
+	MX_TIM4_Init();
 	MX_TIM5_Init();
 	MX_USART3_UART_Init();
 	MX_UART7_Init();

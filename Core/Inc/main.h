@@ -65,6 +65,7 @@ void MX_RTC_Init(void);
 void MX_ADC2_Init(void);
 void MX_I2C2_Init(void);
 void MX_TIM3_Init(void);
+void MX_TIM4_Init(void);
 
 /* USER CODE BEGIN EFP */
 
