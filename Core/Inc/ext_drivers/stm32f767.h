@@ -41,7 +41,6 @@ typedef struct {
 	osMutexId_t spi6_mutex;
 	osMutexId_t	uart3_mutex;
 	osMutexId_t	uart7_mutex;
-	osMessageQueueId_t can1_mq;
 
 	CAN_TxHeaderTypeDef can1_txheader;
 } stm32f767_device_t;

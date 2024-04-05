@@ -27,6 +27,7 @@ typedef struct {
     CAN_TxHeaderTypeDef *tx_header;
     uint32_t tx_mailbox;
     canbus_packet_t rx_packet;
+    canbus_packet_t tx_packet;
 } canbus_device_t;
 
 void canbus_device_init(canbus_device_t *dev, CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *tx_header);

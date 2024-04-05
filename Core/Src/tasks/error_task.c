@@ -22,7 +22,7 @@ void error_task_fn(void *arg);
 TaskHandle_t error_task_start(app_data_t *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(error_task_fn, "ERROR task", 128, (void *)data, 10, &handle);
+    xTaskCreate(error_task_fn, "ERROR task", 128, (void *)data, 14, &handle);
     return handle;
 }
 
@@ -46,8 +46,11 @@ void error_task_fn(void *arg)
 		data->bms_fail = HAL_GPIO_ReadPin(BMS_Fail_GPIO_Port, BMS_Fail_Pin);
 		data->bspd_fail = HAL_GPIO_ReadPin(BSPD_Fail_GPIO_Port, BSPD_Fail_Pin);
 
-		if(data->imd_fail || data->bms_fail || data->bspd_fail) set_ssa(100);
-		else set_ssa(0);
+		set_ssa(data->board.ams.air_state ? 0 : 100);
+
+		// TODO: for next rev of shutdown
+		//if(!data->board.ams.air_status && !data->imd_fail && !data->bms_fail && !data->bspd_fail) set_ssa(100);
+		//else set_ssa(0);
 
 		data->hard_fault = (data->apps_fault ||
 				            data->bse_fault ||

@@ -28,7 +28,7 @@ void apps_task_fn(void *arg);
 TaskHandle_t apps_task_start(app_data_t *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 7, &handle);
+    xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 10, &handle);
     return handle;
 }
 
@@ -37,19 +37,14 @@ void apps_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
     poten_t *apps1 = &data->board.apps1;
     poten_t *apps2 = &data->board.apps2;
-    osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
+    canbus_packet_t *tx_packet = &data->board.canbus_device.tx_packet;
 
     float throttle_raw;
-    uint16_t throttleHex;
-    canbus_packet_t TxPacket;
+    uint16_t throttle_hex;
     uint32_t entry;
 
-    for(uint8_t i = 0; i < 8; i++)
-    {
-        TxPacket.data[i] = 0x00;
-    }
-    TxPacket.id = MTR_CMD_ID;
-    osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
+    for(uint8_t i = 0; i < 8; i++) tx_packet->data[i] = 0x00;
+    tx_packet->id = MTR_CMD_ID;
     xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
@@ -70,34 +65,35 @@ void apps_task_fn(void *arg)
         throttle_raw = (apps1->percent + apps2->percent) / 2;
         data->throttle = (int)throttle_raw;
 
+        tx_packet->id = MTR_CMD_ID;
         if(data->hard_fault || data->soft_fault)
         {
-            TxPacket.data[0] = 0;
-            TxPacket.data[1] = 0;
-            TxPacket.data[2] = 0;
-            TxPacket.data[3] = 0;
-            TxPacket.data[4] = 1; // Forward direction
-            TxPacket.data[5] = 0; // Disable inverter
-            TxPacket.data[6] = 0;
-            TxPacket.data[7] = 0;
+            tx_packet->data[0] = 0;
+            tx_packet->data[1] = 0;
+            tx_packet->data[2] = 0;
+            tx_packet->data[3] = 0;
+            tx_packet->data[4] = 1; // Forward direction
+            tx_packet->data[5] = 0; // Disable inverter
+            tx_packet->data[6] = 0;
+            tx_packet->data[7] = 0;
         }
         else
         {
-            throttleHex = (uint16_t)(data->throttle * MAXTRQ / 10.0); // CM CANBus Protocol
-            TxPacket.data[0] = TO_LSB(throttleHex);
-            TxPacket.data[1] = TO_MSB(throttleHex);
-            TxPacket.data[2] = 0;
-            TxPacket.data[3] = 0;
-            TxPacket.data[4] = 1; // Forward direction
-            TxPacket.data[5] = 1; // Enable inverter
-            TxPacket.data[6] = 0;
-            TxPacket.data[7] = 0;
+            throttle_hex = (uint16_t)(data->throttle * MAXTRQ / 10.0); // CM CANBus Protocol
+            tx_packet->data[0] = TO_LSB(throttle_hex);
+            tx_packet->data[1] = TO_MSB(throttle_hex);
+            tx_packet->data[2] = 0;
+            tx_packet->data[3] = 0;
+            tx_packet->data[4] = 1; // Forward direction
+            tx_packet->data[5] = 1; // Enable inverter
+            tx_packet->data[6] = 0;
+            tx_packet->data[7] = 0;
         }
 
         //if(data->rtdFlag)
         //{
-            osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
-            xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
+    		xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
+
         //}
 
         osDelayUntil(entry + (1000 / APPS_FREQ));

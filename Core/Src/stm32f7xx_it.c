@@ -302,24 +302,94 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
-	BaseType_t task = 0;
+	//BaseType_t task = 0;
 	extern app_data_t app;
-	canbus_packet_t *rx_packet = &app.board.canbus_device.rx_packet;
+	canbus_device_t *canbus = &app.board.canbus_device;
+	canbus_packet_t *rx_packet = &canbus->rx_packet;
+    ams_t *ams = &app.board.ams;
 	CAN_RxHeaderTypeDef rx_header;
 
-	// Clear data in rx packet
-	for (uint8_t i = 0; i < 8; i++){
-		rx_packet->data[i] = 0x00;
-	}
+    // See ECU_AMS_CANBUS_Protocol.xlsx
+    ams_data_packet_t const ams_data_dest[] = {
+    		{0,  &ams->state,             &ams->air_state,         &ams->current},
+			{1,  &ams->imd_ok,            &ams->imd_status,        &ams->imd_duty},
+			{2,  &ams->max_temp,          &ams->min_volt,          &ams->max_volt},
+    		{3,  &ams->segs[0].volts[0],  &ams->segs[0].volts[1],  &ams->segs[0].volts[2]},
+			{4,  &ams->segs[0].volts[3],  &ams->segs[0].volts[4],  &ams->segs[0].volts[5]},
+			{5,  &ams->segs[0].volts[6],  &ams->segs[0].volts[7],  &ams->segs[0].volts[8]},
+			{6,  &ams->segs[0].volts[9],  &ams->segs[0].volts[10], &ams->segs[0].volts[11]},
+			{7,  &ams->segs[0].volts[12], &ams->segs[0].volts[13], NULL},
+			{8,  &ams->segs[1].volts[0],  &ams->segs[1].volts[1],  &ams->segs[1].volts[2]},
+			{9,  &ams->segs[1].volts[3],  &ams->segs[1].volts[4],  &ams->segs[1].volts[5]},
+			{10, &ams->segs[1].volts[6],  &ams->segs[1].volts[7],  &ams->segs[1].volts[8]},
+			{11, &ams->segs[1].volts[9],  &ams->segs[1].volts[10], &ams->segs[1].volts[11]},
+			{12, &ams->segs[1].volts[12], &ams->segs[1].volts[13], NULL},
+			{13, &ams->segs[2].volts[0],  &ams->segs[2].volts[1],  &ams->segs[2].volts[2]},
+			{14, &ams->segs[2].volts[3],  &ams->segs[2].volts[4],  &ams->segs[2].volts[5]},
+			{15, &ams->segs[2].volts[6],  &ams->segs[2].volts[7],  &ams->segs[2].volts[8]},
+			{16, &ams->segs[2].volts[9],  &ams->segs[2].volts[10], &ams->segs[2].volts[11]},
+			{17, &ams->segs[2].volts[12], &ams->segs[2].volts[13], NULL},
+			{18, &ams->segs[3].volts[0],  &ams->segs[3].volts[1],  &ams->segs[3].volts[2]},
+			{19, &ams->segs[3].volts[3],  &ams->segs[3].volts[4],  &ams->segs[3].volts[5]},
+			{20, &ams->segs[3].volts[6],  &ams->segs[3].volts[7],  &ams->segs[3].volts[8]},
+			{21, &ams->segs[3].volts[9],  &ams->segs[3].volts[10], &ams->segs[3].volts[11]},
+			{22, &ams->segs[3].volts[12], &ams->segs[3].volts[13], NULL},
+			{23, &ams->segs[4].volts[0],  &ams->segs[4].volts[1],  &ams->segs[4].volts[2]},
+			{24, &ams->segs[4].volts[3],  &ams->segs[4].volts[4],  &ams->segs[4].volts[5]},
+			{25, &ams->segs[4].volts[6],  &ams->segs[4].volts[7],  &ams->segs[4].volts[8]},
+			{26, &ams->segs[4].volts[9],  &ams->segs[4].volts[10], &ams->segs[4].volts[11]},
+			{27, &ams->segs[4].volts[12], &ams->segs[4].volts[13], NULL},
+			{28, &ams->segs[0].temps[0],  &ams->segs[0].temps[1],  &ams->segs[0].temps[2]},
+			{29, &ams->segs[0].temps[3],  &ams->segs[0].temps[4],  &ams->segs[0].temps[5]},
+			{30, &ams->segs[0].temps[6],  &ams->segs[0].temps[7],  &ams->segs[0].temps[8]},
+			{31, &ams->segs[0].temps[9],  &ams->segs[0].temps[10], &ams->segs[0].temps[11]},
+			{32, &ams->segs[0].temps[12], &ams->segs[0].temps[13], &ams->segs[0].temps[14]},
+			{33, &ams->segs[0].temps[15], &ams->segs[0].temps[16], NULL},
+			{34, &ams->segs[1].temps[0],  &ams->segs[1].temps[1],  &ams->segs[1].temps[2]},
+			{35, &ams->segs[1].temps[3],  &ams->segs[1].temps[4],  &ams->segs[1].temps[5]},
+			{36, &ams->segs[1].temps[6],  &ams->segs[1].temps[7],  &ams->segs[1].temps[8]},
+			{37, &ams->segs[1].temps[9],  &ams->segs[1].temps[10], &ams->segs[1].temps[11]},
+			{38, &ams->segs[1].temps[12], &ams->segs[1].temps[13], &ams->segs[1].temps[14]},
+			{39, &ams->segs[1].temps[15], &ams->segs[1].temps[16], NULL},
+			{40, &ams->segs[2].temps[0],  &ams->segs[2].temps[1],  &ams->segs[2].temps[2]},
+			{41, &ams->segs[2].temps[3],  &ams->segs[2].temps[4],  &ams->segs[2].temps[5]},
+			{42, &ams->segs[2].temps[6],  &ams->segs[2].temps[7],  &ams->segs[2].temps[8]},
+			{43, &ams->segs[2].temps[9],  &ams->segs[2].temps[10], &ams->segs[2].temps[11]},
+			{44, &ams->segs[2].temps[12], &ams->segs[2].temps[13], &ams->segs[2].temps[14]},
+			{45, &ams->segs[2].temps[15], &ams->segs[2].temps[16], NULL},
+			{46, &ams->segs[3].temps[0],  &ams->segs[3].temps[1],  &ams->segs[3].temps[2]},
+			{47, &ams->segs[3].temps[3],  &ams->segs[3].temps[4],  &ams->segs[3].temps[5]},
+			{48, &ams->segs[3].temps[6],  &ams->segs[3].temps[7],  &ams->segs[3].temps[8]},
+			{49, &ams->segs[3].temps[9],  &ams->segs[3].temps[10], &ams->segs[3].temps[11]},
+			{50, &ams->segs[3].temps[12], &ams->segs[3].temps[13], &ams->segs[3].temps[14]},
+			{51, &ams->segs[3].temps[15], &ams->segs[3].temps[16], NULL},
+			{52, &ams->segs[4].temps[0],  &ams->segs[4].temps[1],  &ams->segs[4].temps[2]},
+			{53, &ams->segs[4].temps[3],  &ams->segs[4].temps[4],  &ams->segs[4].temps[5]},
+			{54, &ams->segs[4].temps[6],  &ams->segs[4].temps[7],  &ams->segs[4].temps[8]},
+			{55, &ams->segs[4].temps[9],  &ams->segs[4].temps[10], &ams->segs[4].temps[11]},
+			{56, &ams->segs[4].temps[12], &ams->segs[4].temps[13], &ams->segs[4].temps[14]},
+			{57, &ams->segs[4].temps[15], &ams->segs[4].temps[16], NULL},
+			{58, &ams->fans[0],           &ams->fans[1],           &ams->fans[2]},
+			{59, &ams->fans[3],           &ams->fans[4],           &ams->fans[5]},
+			{60, &ams->fans[6],           &ams->fans[7],           &ams->fans[8]},
+			{61, &ams->fans[9],           NULL,                    NULL}
+    };
 
-	// Read message from CANBus line
-	HAL_CAN_GetRxMessage(app.board.canbus_device.hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
-	// Add the sender ID to the packet
+	for (uint8_t i = 0; i < 8; i++) rx_packet->data[i] = 0x00;
+	HAL_CAN_GetRxMessage(canbus->hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
 	rx_packet->id = rx_header.StdId;
-	// Place packet into Canbus message queue. Timeout must = 0 since this is an ISR
-	osMessageQueuePut(app.board.stm32f767.can1_mq, rx_packet, 0, 0);
-	// Notify CANBus task about received message
-	xTaskNotifyFromISR(app.canbus_task, CANBUS_ISR, eSetBits, &task);
+	uint16_t header = ((uint16_t)rx_packet->data[0] << 8) | rx_packet->data[1];
+	uint16_t data0  = ((uint16_t)rx_packet->data[2] << 8) | rx_packet->data[3];
+	uint16_t data1  = ((uint16_t)rx_packet->data[4] << 8) | rx_packet->data[5];
+	uint16_t data2  = ((uint16_t)rx_packet->data[6] << 8) | rx_packet->data[7];
+	ams_data_packet_t packet_locs = ams_data_dest[header];
+	uint16_t packet_header = packet_locs.header;
+	if(packet_header == header)
+	{
+		if(packet_locs.d0) *packet_locs.d0 = data0;
+		if(packet_locs.d1) *packet_locs.d1 = data1;
+		if(packet_locs.d2) *packet_locs.d2 = data2;
+	}
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {

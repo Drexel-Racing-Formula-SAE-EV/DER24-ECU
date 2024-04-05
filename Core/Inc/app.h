@@ -29,12 +29,13 @@
 #define BPPC_APPS_H_THRESH 25
 #define BPPC_APPS_L_THRESH 5
 
-#define APPS_FREQ 100
-#define ACC_FREQ 10
-#define ERROR_FREQ 50
+#define CAN_FREQ 100
+#define APPS_FREQ 50
+#define ERROR_FREQ 20
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
-#define CLI_FREQ 50
+#define CLI_FREQ 10
+#define ACC_FREQ 5
 #define DASH_FREQ 5
 #define COOL_FREQ 5
 

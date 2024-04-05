@@ -17,8 +17,11 @@ void segment_init(segment_t *dev)
 void ams_init(ams_t *dev)
 {
 	int i;
-	dev->air_status = 0;
-	dev->imd_status = 0;
+	dev->state = 0;
+	dev->air_state = 0;
+	dev->imd_ok = 0;
+	dev->imd_status = 0;;
+	dev->imd_duty = 0;
 	dev->current = 0;
 	dev->max_temp = 0;
 	dev->min_volt = 0;

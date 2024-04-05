@@ -31,8 +31,11 @@ typedef struct
 
 typedef struct
 {
-	uint16_t air_status;
+	uint16_t state;
+	uint16_t air_state;
+	uint16_t imd_ok;
 	uint16_t imd_status;
+	uint16_t imd_duty;
 	uint16_t current;
 	uint16_t max_temp;
 	uint16_t min_volt;
