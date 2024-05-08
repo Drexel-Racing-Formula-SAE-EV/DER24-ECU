@@ -50,20 +50,6 @@ const osMutexAttr_t uart7_mutex_attr = {
 
 void stm32f767_init(stm32f767_device_t *dev)
 {
-	MX_GPIO_Init();
-	MX_CAN1_Init();
-	MX_ADC1_Init();
-	MX_ADC2_Init();
-	MX_ADC3_Init();
-	MX_SPI6_Init();
-	MX_TIM3_Init();
-	MX_TIM4_Init();
-	MX_TIM5_Init();
-	MX_USART3_UART_Init();
-	MX_UART7_Init();
-	MX_RTC_Init();
-	MX_I2C2_Init();
-
 	extern ADC_HandleTypeDef hadc1;
 	extern ADC_HandleTypeDef hadc2;
 	extern ADC_HandleTypeDef hadc3;

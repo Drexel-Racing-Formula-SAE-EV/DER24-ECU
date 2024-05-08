@@ -33,6 +33,7 @@ int get_time(int argc, char *argv[]);
 int set_time(int argc, char *argv[]);
 int get_faults(int argc, char *argv[]);
 int ssa(int argc, char *argv[]);
+int sd(int argc, char *argv[]);
 
 char outline[CLI_LINESZ];
 app_data_t *data;
@@ -47,7 +48,8 @@ command_t cmds[] =
 	{"gtime", &get_time, "get the RTC"},
 	{"stime", &set_time, "set the RTC. format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM"},
 	{"fault", &get_faults, "gets the faults of the system"},
-	{"ssa", &ssa, "set the SSA light duty cycle"}
+	{"ssa", &ssa, "set the SSA light duty cycle"},
+	{"sd", &sd, "print the shutdown circuit states"}
 };
 
 TaskHandle_t cli_task_start(app_data_t *data)
@@ -277,3 +279,16 @@ int ssa(int argc, char *argv[])
 	return ret;
 }
 
+int sd(int argc, char *argv[])
+{
+	int ret = 0;
+	snprintf(outline, CLI_LINESZ, "bms fail:  %d", data->bms_fail);
+	ret |= cli_printline(cli, outline);
+	snprintf(outline, CLI_LINESZ, "imd fail:  %d", data->imd_fail);
+	ret |= cli_printline(cli, outline);
+	snprintf(outline, CLI_LINESZ, "bspd fail: %d", data->bspd_fail);
+	ret |= cli_printline(cli, outline);
+	snprintf(outline, CLI_LINESZ, "fw fail:   %d", !data->fw_state);
+	ret |= cli_printline(cli, outline);
+	return ret;
+}

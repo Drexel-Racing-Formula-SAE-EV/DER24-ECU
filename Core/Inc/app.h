@@ -20,7 +20,7 @@
 #include "ext_drivers/rtc.h"
 
 #define VER_MAJOR 1
-#define VER_MINOR 10
+#define VER_MINOR 12
 #define VER_BUG   0
 
 #define PLAUSIBILITY_THRESH 10
@@ -58,6 +58,7 @@ typedef struct {
 	bool dashboard_fault;
 	bool mq_fault;
 	
+	bool fw_state;
 	bool tsal;
 	bool rtd_button;
 	bool cascadia_ok;

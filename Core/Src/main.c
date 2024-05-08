@@ -90,6 +90,7 @@ void dev_task_fn(void *argument);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -111,6 +112,19 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_CAN1_Init();
+  MX_ADC1_Init();
+  MX_ADC3_Init();
+  MX_SPI6_Init();
+  MX_TIM5_Init();
+  MX_USART3_UART_Init();
+  MX_UART7_Init();
+  MX_RTC_Init();
+  MX_ADC2_Init();
+  MX_I2C2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -153,6 +167,7 @@ int main(void)
   osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

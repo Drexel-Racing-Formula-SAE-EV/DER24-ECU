@@ -44,6 +44,7 @@ void app_create()
 	app.dashboard_fault = false;
 	app.mq_fault = false;
 
+	app.fw_state = false;
 	app.tsal = false;
 	app.rtd_button = false;
 	app.cascadia_ok = true;
@@ -124,6 +125,7 @@ HAL_StatusTypeDef write_time(){
 
 void set_fw(bool state)
 {
+	app.fw_state = state;
 	HAL_GPIO_WritePin(Firmware_Ok_GPIO_Port, Firmware_Ok_Pin, state);
 }
 
@@ -145,7 +147,6 @@ void set_brakelight(bool state)
 
 void set_ssa(int duty)
 {
-
 	if(duty > 100) duty = 100;
 	else if(duty < 0) duty = 0;
 	pwm_set_percent(&app.board.ssa, duty);
