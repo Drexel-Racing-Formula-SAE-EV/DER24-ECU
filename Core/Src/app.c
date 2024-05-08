@@ -82,27 +82,6 @@ void app_create()
 	set_fw(1);
 }
 
-void cli_putline(char *line)
-{
-	static char nl[] = "\r\n";
-	
-	HAL_StatusTypeDef ret = 0;
-
-	if(xPortIsInsideInterrupt())
-	{
-		ret |= HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t *)line, strlen(line));
-		ret |= HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t*)nl, strlen(nl));
-	}
-	else
-	{
-		//while(osMutexAcquire(app.board.stm32f767.uart3_mutex, 0) != osOK) osDelay(5);
-		ret |= HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
-		ret |= HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)nl, strlen(nl), HAL_MAX_DELAY);
-		//osMutexRelease(app.board.stm32f767.uart3_mutex);
-	}
-}
-
-
 HAL_StatusTypeDef read_time(){
 	RTC_TimeTypeDef rTime;
 	RTC_DateTypeDef rDate;

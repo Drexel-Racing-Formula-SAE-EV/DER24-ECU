@@ -290,7 +290,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 		}
 		else if(cli->c >= 32 && cli->c <= 126)
 		{
-			if(cli->index != CLI_LINE_SIZE - 1)
+			if(cli->index != CLI_LINESZ - 1)
 			{
 				cli->line[cli->index++] = cli->c;
 				ret = HAL_UART_Transmit_IT(cli->huart, &cli->c, 1);
