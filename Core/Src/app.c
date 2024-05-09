@@ -67,7 +67,7 @@ void app_create()
     set_cascadia_enable(1);
 
 	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
-	//HAL_CAN_ActivateNotification(app.board.canbus_device.hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
+	HAL_CAN_ActivateNotification(app.board.canbus_device.hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
 
 	assert(app.cli_task = cli_task_start(&app));
 	assert(app.rtd_task = rtd_task_start(&app));
