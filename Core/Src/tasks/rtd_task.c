@@ -52,7 +52,17 @@ void rtd_task_fn(void *arg)
 		}
 		else
 		{
-			if(!(data->tsal && data->rtd_button)) data->rtd_state = false;
+			if(!(data->tsal && data->rtd_button))
+			{
+				data->rtd_state = false;
+				// Trip Shutdown circuit
+				if(!data->hard_fault)
+				{
+					set_fw(0);
+					osDelay(100);
+					set_fw(1);
+				}
+			}
 			delay = 100;
 		}
 		
