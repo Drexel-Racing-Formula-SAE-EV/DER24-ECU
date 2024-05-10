@@ -29,7 +29,6 @@ TaskHandle_t rtd_task_start(app_data_t *data)
 void rtd_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
-
     uint32_t delay;
 
 	for(;;)
@@ -39,31 +38,30 @@ void rtd_task_fn(void *arg)
 		data->cascadia_ok = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
 		if(!data->rtd_state)
 		{
-			delay = 10;
-
+			delay = 50;
 			// EV.10.4.3
 			if(data->tsal && data->brakelight && data->rtd_button && data->cascadia_ok)
 			{
 				set_buzzer(1);
-				osDelay(2000);
+				osDelay(3000);
 				set_buzzer(0);
 				data->rtd_state = true;
 			}
 		}
 		else
 		{
-			if(!(data->tsal && data->rtd_button))
+			delay = 100;
+			if(!data->tsal || !data->rtd_button)
 			{
 				data->rtd_state = false;
-				// Trip Shutdown circuit
-				if(!data->hard_fault)
+				if(!data->hard_fault && data->tsal)
 				{
+					// Trip Shutdown circuit
 					set_fw(0);
-					osDelay(100);
+					osDelay(delay);
 					set_fw(1);
 				}
 			}
-			delay = 100;
 		}
 		
 		osDelay(delay);

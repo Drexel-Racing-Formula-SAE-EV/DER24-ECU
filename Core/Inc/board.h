@@ -44,9 +44,9 @@
 #define COOL_TEMP2_CH 14
 
 #define APPS1_0 85
-#define APPS1_100 230
+#define APPS1_100 195
 #define APPS2_0 95
-#define APPS2_100 400
+#define APPS2_100 305
 
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 

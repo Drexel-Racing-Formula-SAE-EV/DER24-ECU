@@ -15,12 +15,15 @@
 #include <stdint.h>
 #include "stm32f7xx_hal.h"
 
+#define HISTSZ 50
+
 typedef struct {
 	uint16_t min;
 	uint16_t max;
 
 	uint16_t count;
 	float percent;
+	float hist[HISTSZ];
 
 	ADC_HandleTypeDef *handle;
 } poten_t;

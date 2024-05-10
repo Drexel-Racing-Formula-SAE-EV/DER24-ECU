@@ -55,18 +55,17 @@ void apps_task_fn(void *arg)
         apps2->count = stm32f767_adc_read(apps2->handle);
         apps1->percent = poten_get_percent(apps1);
         apps2->percent = poten_get_percent(apps2);
+        data->throttle_diff = apps1->percent - apps2->percent;
+
+        throttle_raw = (apps1->percent + apps2->percent) / 2;
+        data->throttle = (int)throttle_raw;
 
         // T.4.2.5 (2022)
         if(!poten_check_plausibility(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10))
         {
             data->apps_fault = true;
         }
-
-        throttle_raw = (apps1->percent + apps2->percent) / 2;
-        data->throttle = (int)throttle_raw;
-
-        tx_packet->id = MTR_CMD_ID;
-        if(data->hard_fault || data->soft_fault)
+        if(data->hard_fault || data->apps_fault || !data->rtd_state)
         {
             tx_packet->data[0] = 0;
             tx_packet->data[1] = 0;
@@ -89,13 +88,7 @@ void apps_task_fn(void *arg)
             tx_packet->data[6] = 0;
             tx_packet->data[7] = 0;
         }
-
-        //if(data->rtdFlag)
-        //{
-    		xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
-
-        //}
-
+    	xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
         osDelayUntil(entry + (1000 / APPS_FREQ));
     }
 }
