@@ -22,7 +22,7 @@ void bppc_task_fn(void *arg);
 TaskHandle_t bppc_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(bppc_task_fn, "BPPC task", 128, (void *)data, 8, &handle);
+   xTaskCreate(bppc_task_fn, "BPPC task", 128, (void *)data, BPPC_PRIO, &handle);
    return handle;
 }
 

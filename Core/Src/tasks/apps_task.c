@@ -28,7 +28,7 @@ void apps_task_fn(void *arg);
 TaskHandle_t apps_task_start(app_data_t *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 10, &handle);
+    xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, APPS_PRIO, &handle);
     return handle;
 }
 
@@ -55,7 +55,6 @@ void apps_task_fn(void *arg)
         apps2->count = stm32f767_adc_read(apps2->handle);
         apps1->percent = poten_get_percent(apps1);
         apps2->percent = poten_get_percent(apps2);
-        data->throttle_diff = apps1->percent - apps2->percent;
 
         throttle_raw = (apps1->percent + apps2->percent) / 2;
         data->throttle = (int)throttle_raw;

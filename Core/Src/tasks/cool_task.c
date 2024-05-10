@@ -27,7 +27,7 @@ float BV2000_350_convert(float freq);
 TaskHandle_t cool_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(cool_task_fn, "COOL task", 128, (void *)data, 3, &handle);
+   xTaskCreate(cool_task_fn, "COOL task", 128, (void *)data, COOL_PRIO, &handle);
    return handle;
 }
 

@@ -38,6 +38,19 @@
 #define DASH_FREQ 5
 #define COOL_FREQ 5
 
+#define ERROR_PRIO 17
+#define RTD_PRIO 16
+#define CLI_PRIO 15
+#define CAN_PRIO 14
+#define APPS_PRIO 10
+#define BPPC_PRIO 8
+#define BSE_PRIO 7
+#define ACC_PRIO 5
+#define DASH_PRIO 4
+#define COOL_PRIO 3
+
+
+
 #define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
 typedef struct {

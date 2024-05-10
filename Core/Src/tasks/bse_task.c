@@ -22,7 +22,7 @@ void bse_task_fn(void *arg);
 TaskHandle_t bse_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(bse_task_fn, "BSE task", 128, (void *)data, 7, &handle);
+   xTaskCreate(bse_task_fn, "BSE task", 128, (void *)data, BSE_PRIO, &handle);
    return handle;
 }
 

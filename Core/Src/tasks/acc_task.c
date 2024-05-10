@@ -22,7 +22,7 @@ void acc_task_fn(void *arg);
 TaskHandle_t acc_task_start(app_data_t *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(acc_task_fn, "ACC task", 128, (void *)data, 5, &handle);
+    xTaskCreate(acc_task_fn, "ACC task", 128, (void *)data, ACC_PRIO, &handle);
     return handle;
 }
 

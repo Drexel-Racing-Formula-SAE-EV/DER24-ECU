@@ -55,7 +55,7 @@ command_t cmds[] =
 TaskHandle_t cli_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(cli_task_fn, "CLI task", 256, (void *)data, 14, &handle);
+   xTaskCreate(cli_task_fn, "CLI task", 256, (void *)data, CLI_PRIO, &handle);
    return handle;
 }
 

@@ -25,7 +25,7 @@ void dashboard_task_fn(void *arg);
 TaskHandle_t dashboard_task_start(app_data_t *data)
 {
    TaskHandle_t handle;
-   xTaskCreate(dashboard_task_fn, "Dashboard task", 128, (void *)data, 4, &handle);
+   xTaskCreate(dashboard_task_fn, "Dashboard task", 128, (void *)data, DASH_PRIO, &handle);
    return handle;
 }
 
