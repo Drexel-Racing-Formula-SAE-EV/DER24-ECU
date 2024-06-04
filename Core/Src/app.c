@@ -79,8 +79,6 @@ void app_create()
 	assert(app.acc_task = acc_task_start(&app));
 	assert(app.dashboard_task = dashboard_task_start(&app));
 	assert(app.cool_task = cool_task_start(&app));
-
-	set_fw(1);
 }
 
 HAL_StatusTypeDef read_time(){

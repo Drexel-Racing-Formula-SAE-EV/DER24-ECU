@@ -61,11 +61,8 @@ void error_task_fn(void *arg)
 						   data->dashboard_fault
 						   );
 
-		if(data->hard_fault)
-		{
-			set_fw(0);
-			set_cascadia_enable(0);
-		}
+		set_fw(!data->hard_fault);
+		set_cascadia_enable(!data->hard_fault);
 
         osDelayUntil(entry + (1000 / ERROR_FREQ));
     }
