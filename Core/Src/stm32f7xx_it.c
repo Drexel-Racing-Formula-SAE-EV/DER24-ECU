@@ -302,7 +302,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
-	//BaseType_t task = 0;
 	extern app_data_t app;
 	canbus_device_t *canbus = &app.board.canbus_device;
 	canbus_packet_t *rx_packet = &canbus->rx_packet;
@@ -378,17 +377,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	for (uint8_t i = 0; i < 8; i++) rx_packet->data[i] = 0x00;
 	HAL_CAN_GetRxMessage(canbus->hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
 	rx_packet->id = rx_header.StdId;
-	uint16_t header = ((uint16_t)rx_packet->data[0] << 8) | rx_packet->data[1];
-	uint16_t data0  = ((uint16_t)rx_packet->data[2] << 8) | rx_packet->data[3];
-	uint16_t data1  = ((uint16_t)rx_packet->data[4] << 8) | rx_packet->data[5];
-	uint16_t data2  = ((uint16_t)rx_packet->data[6] << 8) | rx_packet->data[7];
-	ams_data_packet_t packet_locs = ams_data_dest[header];
-	uint16_t packet_header = packet_locs.header;
-	if(packet_header == header)
+	if(rx_packet->id == ECU_CANBUS_ID)
 	{
-		if(packet_locs.d0) *packet_locs.d0 = data0;
-		if(packet_locs.d1) *packet_locs.d1 = data1;
-		if(packet_locs.d2) *packet_locs.d2 = data2;
+		uint16_t header = ((uint16_t)rx_packet->data[0] << 8) | rx_packet->data[1];
+		uint16_t data0  = ((uint16_t)rx_packet->data[2] << 8) | rx_packet->data[3];
+		uint16_t data1  = ((uint16_t)rx_packet->data[4] << 8) | rx_packet->data[5];
+		uint16_t data2  = ((uint16_t)rx_packet->data[6] << 8) | rx_packet->data[7];
+		ams_data_packet_t packet_locs = ams_data_dest[header];
+		uint16_t packet_header = packet_locs.header;
+		if(packet_header == header)
+		{
+			if(packet_locs.d0) *packet_locs.d0 = data0;
+			if(packet_locs.d1) *packet_locs.d1 = data1;
+			if(packet_locs.d2) *packet_locs.d2 = data2;
+		}
 	}
 }
 

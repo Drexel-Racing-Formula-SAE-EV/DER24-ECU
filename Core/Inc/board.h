@@ -51,7 +51,8 @@
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
 
-#define MTR_CMD_ID 0x0C0
+#define ECU_CANBUS_ID 0x420
+#define CM_CANBUS_ID 0x0C0
 
 typedef struct {
 	stm32f767_device_t stm32f767;

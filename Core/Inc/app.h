@@ -19,8 +19,8 @@
 #include "board.h"
 #include "ext_drivers/rtc.h"
 
-#define VER_MAJOR 1
-#define VER_MINOR 12
+#define VER_MAJOR 2
+#define VER_MINOR 1
 #define VER_BUG   0
 
 #define PLAUSIBILITY_THRESH 10
@@ -29,9 +29,9 @@
 #define BPPC_APPS_H_THRESH 25
 #define BPPC_APPS_L_THRESH 5
 
-#define APPS_FREQ 100
+#define APPS_FREQ 50
 #define ERROR_FREQ 50
-#define BSE_FREQ 50
+#define BSE_FREQ 20
 #define BPPC_FREQ 20
 #define CLI_FREQ 10
 #define ACC_FREQ 5
@@ -48,8 +48,6 @@
 #define ACC_PRIO 5
 #define DASH_PRIO 4
 #define COOL_PRIO 3
-
-
 
 #define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 

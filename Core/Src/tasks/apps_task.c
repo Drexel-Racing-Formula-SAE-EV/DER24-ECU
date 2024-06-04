@@ -44,7 +44,7 @@ void apps_task_fn(void *arg)
     uint32_t entry;
 
     for(uint8_t i = 0; i < 8; i++) tx_packet->data[i] = 0x00;
-    tx_packet->id = MTR_CMD_ID;
+    tx_packet->id = CM_CANBUS_ID;
     xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
