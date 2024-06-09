@@ -22,7 +22,7 @@ void error_task_fn(void *arg);
 TaskHandle_t error_task_start(app_data_t *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(error_task_fn, "ERROR task", 128, (void *)data, 14, &handle);
+    xTaskCreate(error_task_fn, "ERROR task", 128, (void *)data, ERR_PRIO, &handle);
     return handle;
 }
 
@@ -51,6 +51,7 @@ void error_task_fn(void *arg)
 
 		data->hard_fault = (data->apps_fault ||
 				            data->bse_fault ||
+							data->coolant_fault ||
 							data->cascadia_error
 						    );
         
@@ -61,9 +62,9 @@ void error_task_fn(void *arg)
 						   data->dashboard_fault
 						   );
 
-		set_fw(!data->hard_fault);
+        set_fw(!data->coolant_fault);
 		set_cascadia_enable(!data->hard_fault);
 
-        osDelayUntil(entry + (1000 / ERROR_FREQ));
+        osDelayUntil(entry + (1000 / ERR_FREQ));
     }
 }

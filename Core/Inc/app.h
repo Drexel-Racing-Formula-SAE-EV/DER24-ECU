@@ -29,8 +29,8 @@
 #define BPPC_APPS_H_THRESH 25
 #define BPPC_APPS_L_THRESH 5
 
-#define APPS_FREQ 50
-#define ERROR_FREQ 50
+#define ERR_FREQ 20
+#define APPS_FREQ 20
 #define BSE_FREQ 20
 #define BPPC_FREQ 20
 #define CLI_FREQ 10
@@ -38,7 +38,7 @@
 #define DASH_FREQ 5
 #define COOL_FREQ 5
 
-#define ERROR_PRIO 17
+#define ERR_PRIO 17
 #define RTD_PRIO 16
 #define CLI_PRIO 15
 #define CAN_PRIO 14
@@ -49,7 +49,7 @@
 #define DASH_PRIO 4
 #define COOL_PRIO 3
 
-#define MAXTRQ 100 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
+#define MAXTRQ 160 // maximum nM of toruqe that will be requested from motorcontroller (=100% throttle)
 
 typedef struct {
 	int throttle;
@@ -60,6 +60,7 @@ typedef struct {
 	bool hard_fault;
 	bool soft_fault;
 	
+	bool coolant_fault;
 	bool apps_fault;
 	bool bse_fault;
 	bool bppc_fault;
@@ -74,6 +75,7 @@ typedef struct {
 	bool rtd_button;
 	bool cascadia_ok;
 	bool cascadia_error;
+	bool cascadia_en;
 	bool imd_fail;
 	bool bms_fail;
 	bool bspd_fail;

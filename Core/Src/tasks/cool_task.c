@@ -21,6 +21,7 @@
 */
 void cool_task_fn(void *arg);
 
+bool check_coolant_fault(app_data_t *data);
 float NXFT15XV103FEAB050_convert(uint16_t count);
 float BV2000_350_convert(float freq);
 
@@ -67,8 +68,16 @@ void cool_task_fn(void *arg)
 		// TODO: determine pump speed requirements
 		pwm_set_percent(pump, 10);
 
+		data->coolant_fault = check_coolant_fault(data);
+
 		osDelayUntil(entry + (1000 / COOL_FREQ));
 	}
+}
+
+bool check_coolant_fault(app_data_t *data)
+{
+	// TODO: Calibrate and check for faults
+	return false;
 }
 
 float NXFT15XV103FEAB050_convert(uint16_t count)

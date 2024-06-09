@@ -27,11 +27,11 @@
 #include "ext_drivers/ams.h"
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
-#define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
-#define BSE1_MAX 2238 //Brake emulator max: 2240 //Theoretical value (ADC max): 1900
+#define BSE1_MIN 280//Brake emulator min: 155 //Theoretical value (ADC max): 339
+#define BSE1_MAX 600 //Brake emulator max: 2240 //Theoretical value (ADC max): 1900
 // 0.14V -1.8V *(3/2) => 0.21V - 2.7V
-#define BSE2_MIN 175 //Brake emulator min: 175 //Theoretical value (ADC max): 810
-#define BSE2_MAX 2250 //Brake emulator max: 2250 //Theoretical value (ADC max): 2158
+#define BSE2_MIN 305 //Brake emulator min: 175 //Theoretical value (ADC max): 810
+#define BSE2_MAX 960 //Brake emulator max: 2250 //Theoretical value (ADC max): 2158
 // TODO: Calibrate
 // 0.5V-4.5V Sensor output * 2/3 VDiv = 0.33V-3V * 4095 / 3.3V = 413Ct-3723Ct
 #define COOL_PRESS_MIN 413

@@ -35,6 +35,7 @@ void app_create()
 	app.hard_fault = false;
 	app.soft_fault = false;
 
+	app.coolant_fault = false;
 	app.apps_fault = false;
 	app.bse_fault = false;
 	app.bppc_fault = false;
@@ -49,6 +50,7 @@ void app_create()
 	app.rtd_button = false;
 	app.cascadia_ok = true;
 	app.cascadia_error = false;
+	app.cascadia_en = false;
 	app.imd_fail = false;
 	app.bms_fail = false;
 	app.bspd_fail = false;
@@ -134,6 +136,7 @@ void set_buzzer(bool state)
 
 void set_cascadia_enable(bool state)
 {
+	app.cascadia_en = state;
 	HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, state);
 }
 

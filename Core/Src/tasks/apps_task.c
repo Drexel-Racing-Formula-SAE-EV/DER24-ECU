@@ -43,9 +43,7 @@ void apps_task_fn(void *arg)
     uint16_t throttle_hex;
     uint32_t entry;
 
-    for(uint8_t i = 0; i < 8; i++) tx_packet->data[i] = 0x00;
     tx_packet->id = CM_CANBUS_ID;
-    xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
     for(;;)
     {
@@ -64,7 +62,11 @@ void apps_task_fn(void *arg)
         {
             data->apps_fault = true;
         }
-        if(data->hard_fault || data->apps_fault || !data->rtd_state)
+        if(!data->cascadia_ok)
+        {
+            for(uint8_t i = 0; i < 8; i++) tx_packet->data[i] = 0x00;
+        }
+        else if(data->hard_fault || data->apps_fault || !data->rtd_state)
         {
             tx_packet->data[0] = 0;
             tx_packet->data[1] = 0;
