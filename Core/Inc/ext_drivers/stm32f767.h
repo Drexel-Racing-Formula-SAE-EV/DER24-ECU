@@ -43,9 +43,9 @@ typedef struct {
 	osMutexId_t	uart7_mutex;
 
 	CAN_TxHeaderTypeDef can1_txheader;
-} stm32f767_device_t;
+} stm32f767_t;
 
-void stm32f767_init(stm32f767_device_t *dev);
+void stm32f767_init(stm32f767_t *dev);
 uint16_t stm32f767_adc_read(ADC_HandleTypeDef *hadc);
 HAL_StatusTypeDef stm32f767_adc_switch_channel(ADC_HandleTypeDef *hadc, uint32_t channel);
 

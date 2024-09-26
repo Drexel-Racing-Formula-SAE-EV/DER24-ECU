@@ -29,7 +29,7 @@ TaskHandle_t acc_task_start(app_data_t *data)
 void acc_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
-    mpu6050_device_t *mpu6050 = &data->board.mpu6050;
+    mpu6050_t *mpu6050 = &data->board.mpu6050;
     int ret = 0;
     uint32_t entry;
 

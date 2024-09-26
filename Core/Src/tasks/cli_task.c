@@ -37,7 +37,7 @@ int sd(int argc, char *argv[]);
 
 char outline[CLI_LINESZ];
 app_data_t *data;
-cli_device_t *cli;
+cli_t *cli;
 command_t cmds[] =
 {
 	{"help", &help, "print help menu"},

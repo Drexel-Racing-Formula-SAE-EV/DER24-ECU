@@ -97,10 +97,10 @@ typedef struct
 	float acc_div;
 	float gyro_div;
 	HAL_StatusTypeDef error;
-} mpu6050_device_t;
+} mpu6050_t;
 
-int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDef *hi2c);
+int mpu6050_init(mpu6050_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDef *hi2c);
 
-int mpu6050_read(mpu6050_device_t *dev);
+int mpu6050_read(mpu6050_t *dev);
 
 #endif

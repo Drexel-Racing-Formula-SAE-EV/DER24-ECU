@@ -48,7 +48,7 @@ const osMutexAttr_t uart7_mutex_attr = {
 	.cb_size = 0UL,
 };
 
-void stm32f767_init(stm32f767_device_t *dev)
+void stm32f767_init(stm32f767_t *dev)
 {
 	extern ADC_HandleTypeDef hadc1;
 	extern ADC_HandleTypeDef hadc2;

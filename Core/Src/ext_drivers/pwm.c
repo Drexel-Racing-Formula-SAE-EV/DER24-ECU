@@ -7,7 +7,7 @@
 
 #include "ext_drivers/pwm.h"
 
-int pwm_device_init(pwm_device_t *dev, TIM_TypeDef *timer, TIM_HandleTypeDef *htim, uint64_t max_timer_val, volatile uint32_t *CCR, int channel)
+int pwm_device_init(pwm_t *dev, TIM_TypeDef *timer, TIM_HandleTypeDef *htim, uint64_t max_timer_val, volatile uint32_t *CCR, int channel)
 {
 	dev->timer = timer;
 	dev->htim = htim;
@@ -21,7 +21,7 @@ int pwm_device_init(pwm_device_t *dev, TIM_TypeDef *timer, TIM_HandleTypeDef *ht
 	return 0;
 }
 
-int pwm_set_percent(pwm_device_t *dev, float percent)
+int pwm_set_percent(pwm_t *dev, float percent)
 {
 	if(percent > 100.0) percent = 100;
 	else if(percent < 0) percent = 0;

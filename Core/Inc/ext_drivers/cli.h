@@ -30,7 +30,7 @@ typedef struct {
     unsigned int msg_valid;
     char line[CLI_LINESZ];
     HAL_StatusTypeDef ret;
-} cli_device_t;
+} cli_t;
 
 typedef struct {
     char *name;
@@ -38,8 +38,8 @@ typedef struct {
     char *desc;
 } command_t;
 
-void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart);
-int cli_printline(cli_device_t *dev, char *line);
+void cli_device_init(cli_t *dev, UART_HandleTypeDef *huart);
+int cli_printline(cli_t *dev, char *line);
 int tokenize(char *s, char *toks[], int maktoks, char *delim);
 
 #endif

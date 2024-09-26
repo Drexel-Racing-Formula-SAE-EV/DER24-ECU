@@ -19,9 +19,9 @@ typedef struct
 	uint64_t max_timer_val;
 	volatile uint32_t *CCR;
 	float duty_cycle;
-} pwm_device_t;
+} pwm_t;
 
-int pwm_device_init(pwm_device_t *dev, TIM_TypeDef *timer, TIM_HandleTypeDef *htim, uint64_t max_timer_val, volatile uint32_t *CCR, int channel);
-int pwm_set_percent(pwm_device_t *dev, float percent);
+int pwm_device_init(pwm_t *dev, TIM_TypeDef *timer, TIM_HandleTypeDef *htim, uint64_t max_timer_val, volatile uint32_t *CCR, int channel);
+int pwm_set_percent(pwm_t *dev, float percent);
 
 #endif /* __PWM_H_ */

@@ -37,7 +37,7 @@ void apps_task_fn(void *arg)
     app_data_t *data = (app_data_t *)arg;
     poten_t *apps1 = &data->board.apps1;
     poten_t *apps2 = &data->board.apps2;
-    canbus_packet_t *tx_packet = &data->board.canbus_device.tx_packet;
+    canbus_packet_t *tx_packet = &data->board.canbus.tx_packet;
 
     float throttle_raw;
     uint16_t throttle_hex;

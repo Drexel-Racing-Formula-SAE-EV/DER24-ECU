@@ -39,7 +39,7 @@ void cool_task_fn(void *arg)
     flow_sensor_t *flow = &data->board.cool_flow;
     ntc_t *temp1 = &data->board.cool_temp1;
     ntc_t *temp2 = &data->board.cool_temp2;
-    pwm_device_t *pump = &data->board.cool_pump;
+    pwm_t *pump = &data->board.cool_pump;
 
     uint32_t entry;
 

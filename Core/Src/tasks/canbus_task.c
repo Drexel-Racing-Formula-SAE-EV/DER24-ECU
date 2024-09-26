@@ -29,9 +29,9 @@ void canbus_task_fn(void *arg)
 {
     app_data_t *data = (app_data_t *)arg;
 
-    canbus_device_t *canbus = &data->board.canbus_device;
+    canbus_t *canbus = &data->board.canbus;
     CAN_HandleTypeDef *hcan = canbus->hcan;
-    CAN_TxHeaderTypeDef *tx_header = data->board.canbus_device.tx_header;
+    CAN_TxHeaderTypeDef *tx_header = data->board.canbus.tx_header;
     canbus_packet_t can_packet;
     HAL_StatusTypeDef can_status;
     osStatus_t mq_status;

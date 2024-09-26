@@ -14,7 +14,7 @@
 
 #include "ext_drivers/cli.h"
 
-void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart)
+void cli_device_init(cli_t *dev, UART_HandleTypeDef *huart)
 {
     dev->huart = huart;
     dev->index = 0;
@@ -25,7 +25,7 @@ void cli_device_init(cli_device_t *dev, UART_HandleTypeDef *huart)
     dev->ret = 0;
 }
 
-int cli_printline(cli_device_t *dev, char *line)
+int cli_printline(cli_t *dev, char *line)
 {
 	static char nl[] = "\r\n";
 	HAL_StatusTypeDef ret = 0;

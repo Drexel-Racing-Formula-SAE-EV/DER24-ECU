@@ -174,7 +174,7 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 	extern app_data_t app;
 
-	CAN_HandleTypeDef *hcan1 = app.board.canbus_device.hcan;
+	CAN_HandleTypeDef *hcan1 = app.board.canbus.hcan;
 #if 0
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
@@ -255,7 +255,7 @@ void UART7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern app_data_t app;
-	cli_device_t *cli = &app.board.cli;
+	cli_t *cli = &app.board.cli;
 	char endl[] = "\r\n";
 	HAL_StatusTypeDef ret = 0;
 
@@ -303,7 +303,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	extern app_data_t app;
-	canbus_device_t *canbus = &app.board.canbus_device;
+	canbus_t *canbus = &app.board.canbus;
 	canbus_packet_t *rx_packet = &canbus->rx_packet;
     ams_t *ams = &app.board.ams;
 	CAN_RxHeaderTypeDef rx_header;

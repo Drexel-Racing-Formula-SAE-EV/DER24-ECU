@@ -55,7 +55,7 @@
 #define CM_CANBUS_ID 0x0C0
 
 typedef struct {
-	stm32f767_device_t stm32f767;
+	stm32f767_t stm32f767;
 	poten_t apps1;
 	poten_t apps2;
 	pressure_sensor_t bse1;
@@ -64,12 +64,12 @@ typedef struct {
  	flow_sensor_t cool_flow;
  	ntc_t cool_temp1;
  	ntc_t cool_temp2;
- 	pwm_device_t cool_pump;
- 	canbus_device_t canbus_device;
-	cli_device_t cli;
-	mpu6050_device_t mpu6050;
+ 	pwm_t cool_pump;
+ 	canbus_t canbus;
+	cli_t cli;
+	mpu6050_t mpu6050;
 	dashboard_t dashboard;
-	pwm_device_t ssa;
+	pwm_t ssa;
 	ams_t ams;
 } board_t;
 

@@ -10,7 +10,7 @@
 const float GRYO_DIVS[4] = {131.0, 65.5, 32.8, 16.4};
 const float ACC_DIVS[4] = {16384.0, 8192.0, 4096.0, 2048.0};
 
-int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDef *hi2c){
+int mpu6050_init(mpu6050_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDef *hi2c){
 	uint8_t temp_data;
 	HAL_StatusTypeDef ret = 0;
 
@@ -47,7 +47,7 @@ int mpu6050_init(mpu6050_device_t *dev, mpu6050_config_t *conf, I2C_HandleTypeDe
 	return ret;
 }
 
-int mpu6050_read(mpu6050_device_t *dev){
+int mpu6050_read(mpu6050_t *dev){
 	HAL_StatusTypeDef ret;
 	uint8_t data[14] = {0};
 
