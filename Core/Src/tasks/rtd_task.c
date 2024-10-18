@@ -37,6 +37,7 @@ void rtd_task_fn(void *arg)
 		data->rtd_button = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
 		data->cascadia_ok = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
 
+		// state machine (as described in Teams -> Electrical - Firmware -> Files -> RTD_FSM.pptx)
 		switch(data->rtd_mode)
 		{
 			case TSAL_AWAIT:
@@ -70,18 +71,20 @@ void rtd_task_fn(void *arg)
 				}
 				break;
 		}
+		
 		// from any state
 		if(!data->tsal)
 		{
 			data->rtd_mode = TSAL_AWAIT;
 		}
-		osDelay(delay);
+
+		// Trip Shutdown circuit
 		if(!data->hard_fault && data->tsal)
 		{
-			// Trip Shutdown circuit
 			set_fw(0);
 			osDelay(delay);
 			set_fw(1);
 		}
+		osDelay(delay);
 	}
 }
