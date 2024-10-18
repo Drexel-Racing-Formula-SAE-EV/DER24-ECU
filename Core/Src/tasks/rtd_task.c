@@ -36,34 +36,52 @@ void rtd_task_fn(void *arg)
 		data->tsal = HAL_GPIO_ReadPin(TSAL_HV_SIG_GPIO_Port, TSAL_HV_SIG_Pin);
 		data->rtd_button = HAL_GPIO_ReadPin(RTD_Go_GPIO_Port, RTD_Go_Pin);
 		data->cascadia_ok = !HAL_GPIO_ReadPin(MTR_Ok_GPIO_Port, MTR_Ok_Pin);
-		if(!data->rtd_state)
+
+		switch(data->rtd_mode)
 		{
-			delay = 50;
-			// EV.10.4.3
-			if(data->tsal && data->brakelight && data->rtd_button && data->cascadia_ok)
-			{
-				set_buzzer(1);
-				osDelay(3000);
-				set_buzzer(0);
-				data->rtd_state = true;
-			}
-		}
-		else
-		{
-			delay = 100;
-			if(!data->tsal || !data->rtd_button)
-			{
-				data->rtd_state = false;
-				if(!data->hard_fault && data->tsal)
+			case TSAL_AWAIT:
+				if(data->tsal)
 				{
-					// Trip Shutdown circuit
-					set_fw(0);
-					osDelay(delay);
-					set_fw(1);
+					data->rtd_mode = RTD_BUTTON_AWAIT;
 				}
-			}
+				break;
+			
+			case RTD_BUTTON_AWAIT:
+				if(data->rtd_button)
+				{
+					data->rtd_mode = RTD_CONDITIONS_AWAIT;
+				}
+				break;
+
+			case RTD_CONDITIONS_AWAIT:
+				if(data->cascadia_ok && data->brakelight && data->rtd_button)
+				{
+					data->rtd_mode = RTD_ENABLED;
+					set_buzzer(1);
+					osDelay(3000);
+					set_buzzer(0);
+				}
+				break;
+
+			case RTD_ENABLED:
+				if(!data->rtd_button)
+				{
+					data->rtd_mode = RTD_CONDITIONS_AWAIT;
+				}
+				break;
 		}
-		
+		// from any state
+		if(!data->tsal)
+		{
+			data->rtd_mode = TSAL_AWAIT;
+		}
 		osDelay(delay);
+		if(!data->hard_fault && data->tsal)
+		{
+			// Trip Shutdown circuit
+			set_fw(0);
+			osDelay(delay);
+			set_fw(1);
+		}
 	}
 }

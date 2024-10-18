@@ -45,7 +45,7 @@ void dashboard_task_fn(void *arg)
 		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "brake %d" NEWLINE, data->brake);
 		ret |= dashboard_write(dash, dash->line);
-		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_state);
+		snprintf(dash->line, DASH_LINESZ, "rtd %d" NEWLINE, data->rtd_mode);
 		ret |= dashboard_write(dash, dash->line);
 		snprintf(dash->line, DASH_LINESZ, "bms_fail %d" NEWLINE, data->bms_fail);
 		ret |= dashboard_write(dash, dash->line);

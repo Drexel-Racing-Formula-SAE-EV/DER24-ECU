@@ -66,7 +66,7 @@ void apps_task_fn(void *arg)
         {
             for(uint8_t i = 0; i < 8; i++) tx_packet->data[i] = 0x00;
         }
-        else if(data->hard_fault || data->apps_fault || !data->rtd_state)
+        else if(data->hard_fault || data->apps_fault || !(data->rtd_mode == RTD_ENABLED))
         {
             tx_packet->data[0] = 0;
             tx_packet->data[1] = 0;
